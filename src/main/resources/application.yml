@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/business_platform?characterEncoding=utf8&autoReconnect=true&serverTimezone=PRC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+
+# 权限校验相关信息
+permission:
+  secret-key: X0g1UAH1Gp5cDvIiEVf0bvAuHeFj7e8t
+  subject: BUSSINESS-PLATFORM
+
