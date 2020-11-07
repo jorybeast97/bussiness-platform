@@ -11,7 +11,6 @@ import java.util.Date;
 
 @Data
 @TableName("employee")
-@Component
 public class Employee {
 
     @TableId(type = IdType.AUTO)
