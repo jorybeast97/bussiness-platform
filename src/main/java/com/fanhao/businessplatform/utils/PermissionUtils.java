@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +21,11 @@ import java.util.Map;
 @Component
 public class PermissionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionUtils.class);
-    //默认Token过期时间
     private static final long DEFAULT_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000;
+    private static final String JWT_TOKEN_USERNAME = "username";
+    private static final String JWT_TOKEN_ROLE = "role";
+    private static final String JWT_TOKEN_NAME = "name";
+    private static final String JWT_TOKEN_EXPIRE_TIME = "expire_time";
 
     private static String secretKey;
 
@@ -46,8 +48,8 @@ public class PermissionUtils {
         long expire = expireTime == null ? DEFAULT_TOKEN_EXPIRE_TIME : expireTime;
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(role)) return null;
         Map<String, Object> payload = new HashMap<>();
-        payload.put("username", username);
-        payload.put("role", role);
+        payload.put(JWT_TOKEN_USERNAME, username);
+        payload.put(JWT_TOKEN_ROLE, role);
         jwtBuilder = newInstanceBuilder();
         if (additionalInfo != null) jwtBuilder.setClaims(additionalInfo);
         String token = jwtBuilder
@@ -91,8 +93,8 @@ public class PermissionUtils {
         Claims claims = check(token);
         CommonResult<Claims> commonResult = new CommonResult<>();
         if (claims != null &&
-                claims.get("username", String.class).equals(username) &&
-                claims.get("role", String.class).equals(role) &&
+                claims.get(JWT_TOKEN_USERNAME, String.class).equals(username) &&
+                claims.get(JWT_TOKEN_ROLE, String.class).equals(role) &&
                 claims.getExpiration().after(new Date())) {
             commonResult.setResultCode(ResultStatus.SUCCESS.getResultCode());
             commonResult.setData(claims);
@@ -106,6 +108,23 @@ public class PermissionUtils {
         return commonResult;
     }
 
+    /**
+     * 获取token中相关信息
+     * @param token
+     * @return
+     */
+    public static Map<String, String> getClaimsInformation(final String token) {
+        HashMap<String, String> information = new HashMap<>();
+        Claims claims = check(token);
+        if (claims != null) {
+            information.put(JWT_TOKEN_USERNAME, claims.get(JWT_TOKEN_USERNAME, String.class));
+            information.put(JWT_TOKEN_ROLE, claims.get(JWT_TOKEN_ROLE, String.class));
+            information.put(JWT_TOKEN_EXPIRE_TIME, String.valueOf(claims.getExpiration().getTime()));
+            information.put(JWT_TOKEN_NAME, claims.get(JWT_TOKEN_NAME, String.class));
+        }
+        return information;
+    }
+
     private static JwtBuilder newInstanceBuilder() {
         if (jwtBuilder == null) {
             jwtBuilder = new DefaultJwtBuilder();
@@ -113,6 +132,7 @@ public class PermissionUtils {
         return jwtBuilder;
     }
 
+    //将配置文件读取到静态变量
     @Value("${permission.secret-key}")
     private void setSecretKey(String secretKey) {
         PermissionUtils.secretKey = secretKey;

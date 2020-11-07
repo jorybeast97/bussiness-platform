@@ -30,7 +30,7 @@ public class LoginController {
         //TODO 数据库校验步骤
         //doSomething
         String token = PermissionUtils.generateJWT(username, "admin", "范昊", null, null);
-        HttpUtils.writeCookie(response, HttpUtils.TOKEN, token);
+        HttpUtils.writeCookie(response, HttpUtils.TOKEN, token, null);
         CommonResult<String> commonResult = new CommonResult<>();
         commonResult.setAttachMessage("登录成功");
         commonResult.setData(token);
