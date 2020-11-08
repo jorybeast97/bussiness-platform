@@ -1,5 +1,9 @@
 package com.fanhao.businessplatform.common.constant;
 
+/**
+ * 通用返回结果状态码，用于前端状态判断
+ * @author fanhao
+ */
 public enum ResultStatus {
     SUCCESS("200", "操作成功"),
     FAILED("201", "操作失败"),
