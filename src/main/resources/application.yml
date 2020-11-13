@@ -15,4 +15,9 @@ mybatis-plus:
 permission:
   secret-key: X0g1UAH1Gp5cDvIiEVf0bvAuHeFj7e8t
   subject: BUSSINESS-PLATFORM
-
+# 平台工具相关
+utils:
+  thread-utils:
+    core-thread-size: 4
+    max-thread-size: 8
+    keep-alive-time: 1000
