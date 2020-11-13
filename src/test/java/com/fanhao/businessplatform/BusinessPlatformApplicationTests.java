@@ -1,5 +1,6 @@
 package com.fanhao.businessplatform;
 
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.common.constant.ResultStatus;
@@ -27,7 +28,7 @@ class BusinessPlatformApplicationTests {
 
     @Test
     void contextLoads() {
-        ThreadUtils.getThreadPoolHelper().getInformation();
+        System.out.println(SecureUtil.md5("123456"));
     }
 
 }

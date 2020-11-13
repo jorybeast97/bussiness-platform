@@ -43,4 +43,8 @@ public class HttpUtils {
         else cookie.setMaxAge(expireTime);
         response.addCookie(cookie);
     }
+
+    public static String getIpAddress(final HttpServletRequest request) {
+        return request.getRemoteHost();
+    }
 }

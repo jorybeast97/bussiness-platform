@@ -96,15 +96,15 @@ public class PermissionUtils {
                 claims.get(JWT_TOKEN_USERNAME, String.class).equals(username) &&
                 claims.get(JWT_TOKEN_ROLE, String.class).equals(role) &&
                 claims.getExpiration().after(new Date())) {
-            commonResult.setResultCode(ResultStatus.SUCCESS.getResultCode());
+            commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
             commonResult.setData(claims);
-            commonResult.setAttachMessage(null);
+            commonResult.setMessage(null);
             return commonResult;
         }
         LOGGER.warn("PermissionUtils - checkPermissionInfo() : Check permission is failed!");
-        commonResult.setResultCode(ResultStatus.NO_PERMISSION.getResultCode());
+        commonResult.setCode(ResultStatus.NO_PERMISSION.getResultCode());
         commonResult.setData(claims);
-        commonResult.setAttachMessage("权限校验失败,请重新登录");
+        commonResult.setMessage("权限校验失败,请重新登录");
         return commonResult;
     }
 

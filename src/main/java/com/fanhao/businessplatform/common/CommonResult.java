@@ -13,15 +13,15 @@ public class CommonResult<T> {
     //数据
     private T data;
 
-    private String resultCode;
+    private String code;
 
-    private String attachMessage;
+    private String message;
 
     public CommonResult(final T data,
-                        final String resultCode,
-                        final String attachMessage) {
+                        final String code,
+                        final String message) {
         this.data = data;
-        this.resultCode = resultCode;
-        this.attachMessage = attachMessage;
+        this.code = code;
+        this.message = message;
     }
 }

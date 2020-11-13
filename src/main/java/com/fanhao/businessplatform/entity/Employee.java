@@ -47,4 +47,8 @@ public class Employee {
     private Date quitDate;
 
     private int workAge;
+
+    private boolean status;
+
+    private String remark;
 }

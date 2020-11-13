@@ -11,9 +11,9 @@ import java.util.Date;
 @TableName(value = "salary")
 public class Salary {
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
-    private int employeeId;
+    private Integer employeeId;
 
     private double baseSalary;
 
