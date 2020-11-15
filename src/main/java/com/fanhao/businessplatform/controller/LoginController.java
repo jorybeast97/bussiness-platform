@@ -1,8 +1,6 @@
 package com.fanhao.businessplatform.controller;
 
 import com.fanhao.businessplatform.common.CommonResult;
-import com.fanhao.businessplatform.common.constant.ResultStatus;
-import com.fanhao.businessplatform.enhance.annotation.PermissionVerification;
 import com.fanhao.businessplatform.service.EmployeeService;
 import com.fanhao.businessplatform.utils.HttpUtils;
 import com.fanhao.businessplatform.utils.PermissionUtils;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class LoginController {
@@ -61,10 +57,11 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(value = "/freemark", method = RequestMethod.GET)
-    public String test() {
-        return "freemark";
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String indexPage() {
+        return "index";
     }
+
     public boolean check(String username, String password) {
 
         if (username != null && password != null) return true;

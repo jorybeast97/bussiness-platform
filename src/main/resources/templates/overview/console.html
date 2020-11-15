@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>企业人事管理平台</title>
+    <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
+</head>
+<body style="background-color: whitesmoke">
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <!-- 快速入口 -->
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="layui-carousel" id="test1" lay-filter="test1">
+                        <div carousel-item="">
+                            <div><img src="../../static/image/974e824ff5ac153e81c4f49b5c7b4f3a.jpg" style="width: 100%;height: 100%"></div>
+                            <div><img src="../../static/image/Desert%20Storm.jpg" style="width: 100%;height: 100%"></div>
+                            <div><img src="../../static/image/El%20Capitan.jpg" style="width: 100%;height: 100%"></div>
+                            <div><img src="../../static/image/High%20Sierra.jpg" style="width: 100%;height: 100%"></div>
+                            <div><img src="../../static/image/Mojave%20Day.jpg" style="width: 100%;height: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 进度条相关 -->
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-bar-chart"> 系统监控</i>
+                </div>
+                <div class="layui-card-body">
+                    <div style="margin-top: 3px">
+                        <i class="layui-icon layui-icon-engine" style="font-size: 100%;color: gray"> CPU占用率</i>
+                        <div class="layui-progress" style="margin-top: 5px">
+                            <div class="layui-progress-bar layui-bg-orange" lay-percent="34%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 5px">
+                        <i class="layui-icon layui-icon-console" style="font-size: 100%;color: gray"> 内存占用率</i>
+                        <div class="layui-progress" style="margin-top: 5px">
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="66%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 5px">
+                        <i class="layui-icon layui-icon-tabs" style="font-size: 100%;color: gray"> 日志情况</i>
+                        <div class="layui-progress" style="margin-top: 5px">
+                            <div class="layui-progress-bar layui-bg-blue" lay-percent="43%"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 5px">
+                        <i class="layui-icon layui-icon-about" style="font-size: 100%;color: gray"> 异常情况</i>
+                        <div class="layui-progress" style="margin-top: 5px">
+                            <div class="layui-progress-bar layui-bg-red" lay-percent="6%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  系统信息    -->
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-unlink"> 系统信息</i>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="100">
+                            <col width="80">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td>系统版本</td>
+                            <td>0.0.1-SNAPSHOT</td>
+                        </tr>
+                        <tr>
+                            <td>更新时间</td>
+                            <td>2020-11-11</td>
+                        </tr>
+                        <tr>
+                            <td>开发者</td>
+                            <td>范昊</td>
+                        </tr>
+                        <tr>
+                            <td>电子邮箱</td>
+                            <td>jorybeast97@foxmail.com</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 图表展示 -->
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-id-card-o"> 人数统计图</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="department_number" style="width: 800px;height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4" >
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-pie-chart"> 任务统计图</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="task_statistics" style="width: 380px; height: 300px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-line-chart"> 任务完成量对比图</i></div>
+                <div class="layui-card-body">
+                    <div id="user_add" style="width: 600px;height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-cny"> 薪资构成统计</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="test" style="width: 550px;height: 300px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--引入echarts-->
+<script th:src="@{../../static/js/echart/echarts.min.js}"></script>
+<script th:src="@{../../static/js/layui/layui.js}"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+
+    echarts.init(document.getElementById('department_number')).setOption({
+        title: {
+            text: ''
+        },
+        tooltip: {},
+        legend: {
+            data:['总人数','男性','女性']
+        },
+        xAxis: {
+            data: ["销售部","开发组","产品部","售后部","运营部","运维部","董事会"]
+        },
+        yAxis: {},
+        series: [
+            {
+                name: '总人数',
+                type: 'bar',
+                data: [133, 67, 54, 40, 69, 54,12]
+            },
+            {
+                name: '男性',
+                type: 'bar',
+                data: [62, 51, 33, 24, 46, 33,8]
+            },
+            {
+                name: '女性',
+                type: 'bar',
+                data: [71, 16, 21, 16, 23, 21,4]
+            }
+        ]
+    });
+
+    echarts.init(document.getElementById("task_statistics")).setOption({
+        series : [
+            {
+                name: '任务统计',
+                type: 'pie',
+                radius: '60%',
+                roseType: 'angle',
+                data:[
+                    {value:235, name:'正在进行'},
+                    {value:274, name:'已完成'},
+                    {value:310, name:'准备中'},
+                    {value:335, name:'未开始'},
+                    {value:400, name:'已过期'}
+                ]
+            }
+        ]
+    })
+
+    var colors = ['#5793f3', '#d14a61', '#675bba'];
+    echarts.init(document.getElementById("user_add")).setOption({
+        color: colors,
+        tooltip: {
+            trigger: 'none',
+            axisPointer: {
+                type: 'cross'
+            }
+        },
+        legend: {
+            data:['2019年', '2020年']
+        },
+        grid: {
+            top: 70,
+            bottom: 50
+        },
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        color: colors[1]
+                    }
+                },
+                axisPointer: {
+                    label: {
+                        formatter: function (params) {
+                            return '任务完成OKR  ' + params.value
+                                + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                        }
+                    }
+                },
+                data: ['2019-1', '2019-2', '2019-3', '2019-4', '2019-5', '2019-6', '2019-7', '2019-8', '2019-9', '2019-10', '2019-11', '2019-12']
+            },
+            {
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        color: colors[0]
+                    }
+                },
+                axisPointer: {
+                    label: {
+                        formatter: function (params) {
+                            return '任务完成OKR  ' + params.value
+                                + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                        }
+                    }
+                },
+                data: ['2020-1', '2020-2', '2020-3', '2020-4', '2020-5', '2020-6', '2020-7', '2020-8', '2020-9', '2020-10', '2020-11', '2020-12']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '2019年',
+                type: 'line',
+                xAxisIndex: 1,
+                smooth: true,
+                data: [26.7, 15.9, 49.0, 126.4, 66.7, 70.7, 175.6, 182.2, 48.7, 90.8, 46.0, 112.3]
+            },
+            {
+                name: '2020年',
+                type: 'line',
+                smooth: true,
+                data: [113.9, 125.9, 110.1, 181.7, 99.3, 109.2, 231.6, 146.6, 155.4, 128.4, 103.3, 110.7]
+            }
+        ]
+    })
+
+    echarts.init(document.getElementById("test")).setOption(
+        {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            series: [
+                {
+                    name: '直接访问',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [320, 302, 301, 334, 390, 330, 320]
+                },
+                {
+                    name: '邮件营销',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [120, 132, 101, 134, 90, 230, 210]
+                },
+                {
+                    name: '联盟广告',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [220, 182, 191, 234, 290, 330, 310]
+                },
+                {
+                    name: '视频广告',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [150, 212, 201, 154, 190, 330, 410]
+                },
+                {
+                    name: '搜索引擎',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [820, 832, 901, 934, 890, 1045, 1100]
+                }
+            ]
+        }
+    )
+
+    //轮播图
+    layui.use(['carousel', 'form'], function() {
+        var carousel = layui.carousel
+            , form = layui.form;
+        //常规轮播
+        carousel.render({
+            elem: '#test1'
+            , width: '100%'
+            , height: '203px'
+            , arrow: 'hover'
+            , indicator: 'inside'
+        });
+    })
+
+</script>
+</body>
+</html>

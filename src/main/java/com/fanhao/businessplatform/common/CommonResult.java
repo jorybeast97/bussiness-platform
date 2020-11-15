@@ -17,6 +17,8 @@ public class CommonResult<T> {
 
     private String message;
 
+    private Long count;
+
     public CommonResult(final T data,
                         final String code,
                         final String message) {

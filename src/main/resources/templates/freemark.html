@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -34,9 +34,14 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a href="index.html">
+                    <a href="javascript:">
                         <i class="fa fa-home"> 系统首页</i>
                     </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/employee" target="content_iframe"> 员工信息</a></dd>
+                        <dd><a href="freemark.html"> 测试</a></dd>
+
+                    </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
                     <a href="empolyeeInfomation.html">
@@ -79,7 +84,8 @@
 
     <div class="layui-body" style="background-color: whitesmoke">
         <div style="padding: 20px; background-color: #F2F2F2;">
-
+            <iframe name="content_iframe" frameborder="no" border="0" class="larry-iframe"
+                    style="width: 100%;height: 100%" src="/employee"></iframe>
         </div>
     </div>
     <div class="layui-footer">
