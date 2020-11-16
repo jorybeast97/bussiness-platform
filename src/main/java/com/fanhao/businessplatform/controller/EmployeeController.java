@@ -26,9 +26,9 @@ public class EmployeeController {
         return "/employee/employeelist";
     }
 
-    @RequestMapping(value = "/freemark")
-    public String freemark() {
-        return "freemark";
+    @RequestMapping(value = "/addemployee")
+    public String addEmployeePage() {
+        return "/employee/addEmployee";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -37,12 +37,7 @@ public class EmployeeController {
                                      final HttpServletResponse response,
                                      final Integer page,
                                      final Integer limit) {
-        List<Employee> employeeList = employeeService.selectAllEmployee(page, limit);
-        CommonResult<List<Employee>> commonResult = new CommonResult<>();
-        commonResult.setCode("200");
-        commonResult.setData(employeeList);
-        commonResult.setMessage("测试消息");
-        commonResult.setCount(Long.valueOf(employeeList.size()));
-        return commonResult;
+        return employeeService.selectList(page, limit);
     }
+
 }

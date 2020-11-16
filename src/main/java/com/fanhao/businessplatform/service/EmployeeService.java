@@ -90,10 +90,20 @@ public class EmployeeService {
         return employeeMapper.selectById(id);
     }
 
-    public List<Employee> selectAllEmployee(final int pageNum, final int pageSize) {
+    public List<Employee> selectAllEmployee(final Integer pageNum, final Integer pageSize) {
         IPage<Employee> page = new Page<>(pageNum, pageSize);
         page = employeeMapper.selectPage(page,null);
         return page.getRecords();
+    }
+
+    public CommonResult<List<Employee>> selectList(final Integer pageNum, final Integer pageSize) {
+        IPage<Employee> page = new Page<>(pageNum, pageSize);
+        page = employeeMapper.selectPage(page,null);
+        CommonResult<List<Employee>> commonResult = new CommonResult<>();
+        commonResult.setCount(page.getTotal());
+        commonResult.setCode(ResultStatus.LAYUI_SUCCESS.getResultCode());
+        commonResult.setData(page.getRecords());
+        return commonResult;
     }
 
     public List<Employee> selectEmployeeByName(final int pageNum,

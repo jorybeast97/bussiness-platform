@@ -11,10 +11,11 @@
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
+    <div id="layerDemo" class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
         <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        <button data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加员工</button>
     </div>
 </script>
 
@@ -26,7 +27,7 @@
 <script th:src="@{../../static/js/echart/echarts.min.js}"></script>
 <script th:src="@{../../static/js/layui/layui.js}"></script>
 <script>
-    layui.use('table', function(){
+    layui.use(['table','layer'], function(){
         var table = layui.table;
 
         table.render({
@@ -50,30 +51,36 @@
             ,cols: [
                 [
                 {type: 'checkbox', fixed: 'left'}
-                ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
+                ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
                 ,{field:'username', title:'用户名', width:120, edit: 'text'}
                 ,{field:'name', title:'姓名', width:120, edit: 'text'}
                 ,{field:'address', title:'地址', width:120, edit: 'text'}
-                ,{field:'gender', title:'性别', width:120, edit: 'text'}
-                ,{field:'phone', title:'电话号码', width:120, edit: 'text'}
-                ,{field:'email', title:'邮箱', width:150, edit: 'text', templet: function(res){
-                        return '<em>'+ res.email +'</em>'
+                ,{field:'gender', title:'性别', width:120, edit: 'text',templet:function (employee) {
+                        if (employee.gender == 0){
+                            return '男';
+                        }else {
+                            return '女';
+                        }
                     }}
-                ,{field:'department', title:'部门', width:80, edit: 'text', sort: true}
-                ,{field:'position', title:'职位', width:80, edit: 'text', sort: true}
+                ,{field:'phone', title:'电话号码', width:120, edit: 'text'}
+                ,{field:'email', title:'邮箱', width:180, edit: 'text'}
+                ,{field:'department', title:'部门', width:120, edit: 'text', sort: true}
+                ,{field:'position', title:'职位', width:120, edit: 'text'}
                 ,{field:'role', title:'角色', width:100}
-                ,{field:'birthday', title:'生日', width:100}
-                ,{field:'idCard', title:'员工卡号', width:80, sort: true}
-                ,{field:'school', title:'学校', width:80, sort: true}
-                ,{field:'contractStartDate', title:'入职日期', width:80, sort: true}
-                ,{field:'quitDate', title:'离职日期', width:80, sort: true}
-                ,{field:'workAge', title:'工龄', width:120}
+                ,{field:'birthday', title:'生日', width:100,templet:"<div>{{layui.util.toDateString(d.birthday, 'yyyy-MM-dd')}}</div>"}
+                ,{field:'idCard', title:'员工卡号', width:120, sort: true}
+                ,{field:'school', title:'学校', width:120, sort: true}
+                ,{field:'contractStartDate', title:'入职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.contractStartDate, 'yyyy-MM-dd')}}</div>"}
+                ,{field:'quitDate', title:'离职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.quitDate, 'yyyy-MM-dd')}}</div>"}
+                ,{field:'workAge', title:'工龄', width:120, sort: true}
                 ,{field:'status', title:'状态', width:120}
                 ,{field:'remark', title:'备注', width:120}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
                 ]
             ]
             ,page: true
+            ,limit:14
+            ,limits: [10,12,14]
         });
 
         //头工具栏事件
@@ -119,6 +126,57 @@
                     layer.close(index);
                 });
             }
+        });
+
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        var active = {
+            offset: function (othis) {
+                var type = othis.data('type')
+                    ,text = othis.text();
+
+                // layer.open({
+                //     type: 1
+                //     ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                //     ,id: 'layerDemo'+type //防止重复弹出
+                //     ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
+                //     ,btn: '关闭全部'
+                //     ,btnAlign: 'c' //按钮居中
+                //     ,shade: 0 //不显示遮罩
+                //     ,yes: function(){
+                //         layer.closeAll();
+                //     }
+                // });
+                var type = othis.data('type'),
+                    text = othis.text();
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: type
+                    ,title: false //不显示标题栏
+                    ,closeBtn: false
+                    ,area: ['90%','80%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro' + type//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: 'http://localhost:8081/employee/addemployee'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    // ,
+                    // success: function (layero) {
+                    //     var btn = layero.find('.layui-layer-btn');
+                    //     btn.find('.layui-layer-btn0').attr({
+                    //         href: ''
+                    //         , target: '_blank'
+                    //     });
+                    // }
+                });
+            }
+        }
+
+        $('#layerDemo .layui-btn').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
         });
     });
 

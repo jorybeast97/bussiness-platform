@@ -5,6 +5,8 @@ package com.fanhao.businessplatform.common.constant;
  * @author fanhao
  */
 public enum ResultStatus {
+    LAYUI_SUCCESS("0","操作成功","ok"),
+    LAYUI_FAILED("1","操作失败","failed"),
     SUCCESS("200", "操作成功","ok"),
     FAILED("201", "操作失败","fail"),
     NOT_FOUND("404", "资源不存在","no_found"),

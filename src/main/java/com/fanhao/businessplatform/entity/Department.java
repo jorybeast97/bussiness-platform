@@ -15,7 +15,7 @@ public class Department {
 
     private String description;
 
-    private boolean isParent;
+    private Integer departmentLeader;
 
-    private int parentDepartmentId;
+    private String departmentRegion;
 }

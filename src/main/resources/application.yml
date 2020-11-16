@@ -30,3 +30,8 @@ utils:
     core-thread-size: 4
     max-thread-size: 8
     keep-alive-time: 1000
+
+# 自动生成数据
+data-generation:
+  enable: false
+  data-num: 1000
