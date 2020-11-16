@@ -10,6 +10,6 @@ public class DepartmentController {
 
     @RequestMapping(value = "",method = RequestMethod.GET)
     public String departmentPage() {
-        return "/department/departmentInfo";
+        return "/department/departmentlist";
     }
 }
