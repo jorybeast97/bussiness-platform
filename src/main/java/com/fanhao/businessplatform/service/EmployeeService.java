@@ -87,8 +87,18 @@ public class EmployeeService {
         return true;
     }
 
-    public boolean deleteEmployee(final int id) {
-        return employeeMapper.deleteById(id) > 0;
+    public CommonResult<String> deleteEmployee(final Integer id) {
+        CommonResult<String> commonResult = new CommonResult<>();
+        if (id == null) {
+            commonResult.setMessage("员工不存在");
+            commonResult.setCode(ResultStatus.FAILED.getResultCode());
+        }
+        else {
+            employeeMapper.deleteById(id);
+            commonResult.setMessage("删除成功");
+            commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
+        }
+        return commonResult;
     }
 
     public boolean updateEmployee(final Employee employee) {
@@ -141,21 +151,26 @@ public class EmployeeService {
         return new EmployeeBO(employee, department);
     }
 
-    public CommonResult<String> addEmployeeByArgs(Integer id, String username, String password,
-                                                  String name, String address, Boolean gender,
-                                                  String phone, String email, Integer department,
-                                                  String position, String role, String birthday,
-                                                  String idCard, String school, String contractStartDate,
-                                                  String quitDate, Integer workAge, Boolean status,
-                                                  String remark) {
+    public CommonResult<String> addOrUpdateEmployeeByArgs(Integer id, String username, String password,
+                                                          String name, String address, Boolean gender,
+                                                          String phone, String email, Integer department,
+                                                          String position, String role, String birthday,
+                                                          String idCard, String school, String contractStartDate,
+                                                          String quitDate, Integer workAge, Boolean status,
+                                                          String remark) {
         CommonResult<String> commonResult = new CommonResult<>();
-        if (checkUsernameExist(username)){
-            commonResult.setMessage("用户名已经存在,请重新输入");
-            return commonResult;
-        }
         Employee employee = generateEmployee(id, username, password, name, address, gender, phone, email, department, position, role, birthday, idCard, school, contractStartDate, quitDate, workAge, status, remark);
-        employeeMapper.insert(employee);
-        commonResult.setMessage("添加成功");
+        if (id == null) {
+            if (checkUsernameExist(username)){
+                commonResult.setMessage("用户名已经存在,请重新输入");
+                return commonResult;
+            }
+            employeeMapper.insert(employee);
+            commonResult.setMessage("添加成功");
+        }else {
+            employeeMapper.updateById(employee);
+            commonResult.setMessage("更新成功");
+        }
         return commonResult;
     }
 
@@ -170,6 +185,7 @@ public class EmployeeService {
                                      String quitDate, Integer workAge, Boolean status,
                                      String remark) {
         Employee employee = new Employee();
+        employee.setId(id);
         employee.setUsername(username);
         employee.setPassword(password);
         employee.setName(name);

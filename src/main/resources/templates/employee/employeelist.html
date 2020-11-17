@@ -29,6 +29,8 @@
 <script>
     layui.use(['table','layer'], function(){
         var table = layui.table;
+        var layer = layui.layer;
+        var $ = layui.jquery;
 
         table.render({
             elem: '#test'
@@ -68,7 +70,10 @@
                         return employee.department.departmentName;
                     }}
                 ,{field:'position', title:'职位', width:120}
-                ,{field:'role', title:'角色', width:100}
+                ,{field:'role', title:'角色', width:100,templet: function (employee) {
+                        if (employee.role == 'normal') return '普通账号';
+                        else return '管理员';
+                    }}
                 ,{field:'birthday', title:'生日', width:100,templet:"<div>{{layui.util.toDateString(d.birthday, 'yyyy-MM-dd')}}</div>"}
                 ,{field:'idCard', title:'员工卡号', width:120, sort: true}
                 ,{field:'school', title:'学校', width:120, sort: true}
@@ -122,46 +127,43 @@
 
         //监听行工具事件
         table.on('tool(test)', function(obj){
-            var data = obj.data;
-            //console.log(obj)
+            var id = obj.data.id;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
-                    obj.del();
+                    $.get("/employee/delete", {id: id}, function (response) {
+                        layer.msg(response.message);
+                        if (response.code == 200){
+                            obj.del();
+                        }
+                    });
                     layer.close(index);
                 });
             } else if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.email
-                }, function(value, index){
-                    obj.update({
-                        email: value
-                    });
-                    layer.close(index);
+                //弹出编辑页面
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: "修改员工信息" //不显示标题栏
+                    ,area: ['90%','90%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '/employee/editemployee?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,yes : function () {
+                        layer.closeAll();
+                    }
                 });
             }
         });
 
-        var layer = layui.layer;
-        var $ = layui.jquery;
+
 
         var active = {
             offset: function (othis) {
                 var type = othis.data('type')
                     ,text = othis.text();
-
-                // layer.open({
-                //     type: 1
-                //     ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-                //     ,id: 'layerDemo'+type //防止重复弹出
-                //     ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
-                //     ,btn: '关闭全部'
-                //     ,btnAlign: 'c' //按钮居中
-                //     ,shade: 0 //不显示遮罩
-                //     ,yes: function(){
-                //         layer.closeAll();
-                //     }
-                // });
                 var type = othis.data('type'),
                     text = othis.text();
                 layer.open({
@@ -175,7 +177,7 @@
                     ,btn: '关闭窗口'
                     ,btnAlign: 'c'//按钮排列：居中对齐
                     ,moveType: 1 //拖拽模式，0或者1
-                    ,content: 'http://localhost:8081/employee/addemployee'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,content: '/employee/addemployee'//跳转到想要的界面，这里是我自己项目的跳转界面
                     ,
                     yes : function () {
                         layer.closeAll();

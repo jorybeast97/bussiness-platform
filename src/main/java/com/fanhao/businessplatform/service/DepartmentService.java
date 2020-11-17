@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("departmentService")
 public class DepartmentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentService.class);
     @Autowired

@@ -1,16 +1,15 @@
 package com.fanhao.businessplatform.controller;
 
 import com.fanhao.businessplatform.common.CommonResult;
-import com.fanhao.businessplatform.common.constant.ResultStatus;
 import com.fanhao.businessplatform.entity.BO.EmployeeBO;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +31,21 @@ public class EmployeeController {
         return "/employee/addEmployee";
     }
 
+    @RequestMapping(value = "/editemployee")
+    public String editEmployeePage(Integer id,
+                                   Model model) {
+        Employee employee = employeeService.selectEmployeeById(id);
+        model.addAttribute("employee_info", employee);
+        return "/employee/editEmployee";
+    }
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<EmployeeBO>> employeeList(final HttpServletRequest request,
                                                        final HttpServletResponse response,
                                                        final Integer page,
                                                        final Integer limit) {
+
         return employeeService.selectList(page, limit);
     }
 
@@ -50,7 +58,13 @@ public class EmployeeController {
                                      String idCard, String school, String contractStartDate,
                                      String quitDate, Integer workAge, Boolean status,
                                      String remark) {
-        return employeeService.addEmployeeByArgs(id, username, password, name, address, gender, phone, email, department, position, role, birthday, idCard, school, contractStartDate, quitDate, workAge, status, remark);
+        return employeeService.addOrUpdateEmployeeByArgs(id, username, password, name, address, gender, phone, email, department, position, role, birthday, idCard, school, contractStartDate, quitDate, workAge, status, remark);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<String> delete(Integer id) {
+        return employeeService.deleteEmployee(id);
     }
 
 }
