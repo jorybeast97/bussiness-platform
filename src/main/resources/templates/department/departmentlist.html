@@ -32,7 +32,7 @@
 
         table.render({
             elem: '#test'
-            ,url:'http://localhost:8081/employee/list'
+            ,url:'http://localhost:8081/department/list'
             ,parseData: function (res) {
                 return {
                     "code" : res.code,
@@ -47,35 +47,24 @@
                 ,layEvent: 'LAYTABLE_TIPS'
                 ,icon: 'layui-icon-tips'
             }]
-            ,title: '用户数据表'
+            ,title: '部门数据表'
             ,cols: [
                 [
                     {type: 'checkbox', fixed: 'left'}
                     ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
-                    ,{field:'username', title:'用户名', width:120, edit: 'text'}
-                    ,{field:'name', title:'姓名', width:120, edit: 'text'}
-                    ,{field:'address', title:'地址', width:120, edit: 'text'}
-                    ,{field:'gender', title:'性别', width:120, edit: 'text',templet:function (employee) {
-                        if (employee.gender == 0){
-                            return '男';
-                        }else {
-                            return '女';
-                        }
+                    ,{field:'departmentName', title:'部门名称', width:150, edit: 'text'}
+                    ,{field:'departmentLeader', title:'部门负责人', width:150, edit: 'text',templet:function (department) {
+                        return department.departmentLeader.name;
                     }}
-                    ,{field:'phone', title:'电话号码', width:120, edit: 'text'}
-                    ,{field:'email', title:'邮箱', width:180, edit: 'text'}
-                    ,{field:'department', title:'部门', width:120, edit: 'text', sort: true}
-                    ,{field:'position', title:'职位', width:120, edit: 'text'}
-                    ,{field:'role', title:'角色', width:100}
-                    ,{field:'birthday', title:'生日', width:100,templet:"<div>{{layui.util.toDateString(d.birthday, 'yyyy-MM-dd')}}</div>"}
-                    ,{field:'idCard', title:'员工卡号', width:120, sort: true}
-                    ,{field:'school', title:'学校', width:120, sort: true}
-                    ,{field:'contractStartDate', title:'入职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.contractStartDate, 'yyyy-MM-dd')}}</div>"}
-                    ,{field:'quitDate', title:'离职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.quitDate, 'yyyy-MM-dd')}}</div>"}
-                    ,{field:'workAge', title:'工龄', width:120, sort: true}
-                    ,{field:'status', title:'状态', width:120}
-                    ,{field:'remark', title:'备注', width:120}
-                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                    ,{field:'phone', title:'负责人联系方式', width:200, edit: 'text',templet:function (department) {
+                        return department.departmentLeader.phone;
+                    }}
+                    ,{field:'position', title:'负责人职位', width:200, edit: 'text',templet:function (department) {
+                        return department.departmentLeader.position;
+                    }}
+                    ,{field:'departmentRegion', title:'部门负责区域', width:200, edit: 'text'}
+                    ,{field:'description', title:'部门简述', width:200, edit: 'text'}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
                 ]
             ]
             ,page: true

@@ -21,9 +21,11 @@ public class CommonResult<T> {
 
     public CommonResult(final T data,
                         final String code,
-                        final String message) {
+                        final String message,
+                        final Long count) {
         this.data = data;
         this.code = code;
         this.message = message;
+        this.count = count;
     }
 }

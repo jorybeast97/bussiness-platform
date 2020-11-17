@@ -73,7 +73,13 @@
                 ,{field:'contractStartDate', title:'入职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.contractStartDate, 'yyyy-MM-dd')}}</div>"}
                 ,{field:'quitDate', title:'离职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.quitDate, 'yyyy-MM-dd')}}</div>"}
                 ,{field:'workAge', title:'工龄', width:120, sort: true}
-                ,{field:'status', title:'状态', width:120}
+                ,{field:'status', title:'状态', width:120,templet:function (employee) {
+                        if (employee.status == false) {
+                            return '激活';
+                        }else {
+                            return '冻结';
+                        }
+                    }}
                 ,{field:'remark', title:'备注', width:120}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
                 ]
@@ -155,21 +161,17 @@
                     ,offset: type
                     ,title: false //不显示标题栏
                     ,closeBtn: false
-                    ,area: ['90%','80%']//定义宽高
+                    ,area: ['90%','90%']//定义宽高
                     ,shade: 0.8//遮幕
                     ,id: 'LAY_layuipro' + type//设定一个id，防止重复弹出
                     ,btn: '关闭窗口'
                     ,btnAlign: 'c'//按钮排列：居中对齐
                     ,moveType: 1 //拖拽模式，0或者1
                     ,content: 'http://localhost:8081/employee/addemployee'//跳转到想要的界面，这里是我自己项目的跳转界面
-                    // ,
-                    // success: function (layero) {
-                    //     var btn = layero.find('.layui-layer-btn');
-                    //     btn.find('.layui-layer-btn0').attr({
-                    //         href: ''
-                    //         , target: '_blank'
-                    //     });
-                    // }
+                    ,
+                    yes : function () {
+                        layer.closeAll();
+                    }
                 });
             }
         }
