@@ -1,18 +1,75 @@
 package com.fanhao.businessplatform.utils;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.fanhao.businessplatform.common.constant.DataConstant;
+import com.fanhao.businessplatform.entity.Employee;
+import com.fanhao.businessplatform.mapper.EmployeeMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
+@Component
 public class DataCreaterUtils {
+
+    @Autowired
+    private EmployeeMapper mapper;
+
+    public void create() {
+        Employee employee = new Employee();
+        employee.setUsername(UUID.randomUUID().toString());
+        employee.setPassword(SecureUtil.md5("123456"));
+        employee.setName(getRandomName());
+        employee.setAddress(getRandomSchool() + ":" + RandomUtil.randomInt() + "号");
+        employee.setGender(RandomUtil.randomBoolean());
+        employee.setPhone(String.valueOf(RandomUtil.randomLong(13500000000L, 17700000000L)));
+        employee.setEmail(getRandomEmail());
+        employee.setDepartment(RandomUtil.randomInt(1, 7));
+        employee.setPosition(getPosition());
+        employee.setRole("normal");
+        employee.setBirthday(new Date());
+        employee.setIdCard(RandomUtil.randomString(11));
+        employee.setSchool(getRandomSchool());
+        employee.setContractStartDate(new Date());
+        employee.setQuitDate(null);
+        employee.setStatus(false);
+        employee.setWorkAge(1);
+        employee.setRemark("");
+        mapper.insert(employee);
+    }
+
+    public String getRandomEmail() {
+        String prefix = RandomUtil.randomString(8);
+        int k = RandomUtil.randomInt(0, 5);
+        if (k == 0) prefix += "@foxmail.com";
+        if (k == 1) prefix += "@gamil.com";
+        if (k == 2) prefix += "@163.com";
+        if (k == 3) prefix += "@qq.com";
+        if (k == 4) prefix += "@126.com";
+        if (k == 5) prefix += "@tt.com";
+        return prefix;
+    }
+
+
+    /**
+     * 随机获取职位
+     * @return
+     */
+    public String getPosition() {
+        String[] position = DataConstant.POSTION;
+        int index = RandomUtil.randomInt(0, position.length - 1);
+        return position[index];
+    }
 
     /**
      * 获取随机学校
      * @return
      */
-    public static String getRandomSchool() {
+    public String getRandomSchool() {
         String[] school = DataConstant.SCHOOL;
         int index = RandomUtil.randomInt(0, school.length - 1);
         return school[index];
@@ -22,7 +79,7 @@ public class DataCreaterUtils {
      * 获取随机中文姓名
      * @return
      */
-    public static String getRandomName() {
+    public String getRandomName() {
         String[] firstName = DataConstant.FIRST_NAME;
         int index = RandomUtil.randomInt(0, firstName.length - 1);
         String name = firstName[index]; //获得一个随机的姓氏
@@ -36,7 +93,7 @@ public class DataCreaterUtils {
      * 产生随机中文字
      * @return
      */
-    private static String getChinese() {
+    private String getChinese() {
         String str = null;
         int highPos, lowPos;
         Random random = new Random();

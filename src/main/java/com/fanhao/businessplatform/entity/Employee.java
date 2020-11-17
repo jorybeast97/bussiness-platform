@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Data
 @TableName("employee")
+@NoArgsConstructor
 public class Employee {
 
     @TableId(type = IdType.AUTO)
@@ -51,4 +52,26 @@ public class Employee {
     private boolean status;
 
     private String remark;
+
+    public Employee(Integer id, String username, String password, String name, String address, boolean gender, String phone, String email, int department, String position, String role, Date birthday, String idCard, String school, Date contractStartDate, Date quitDate, int workAge, boolean status, String remark) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.address = address;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.department = department;
+        this.position = position;
+        this.role = role;
+        this.birthday = birthday;
+        this.idCard = idCard;
+        this.school = school;
+        this.contractStartDate = contractStartDate;
+        this.quitDate = quitDate;
+        this.workAge = workAge;
+        this.status = status;
+        this.remark = remark;
+    }
 }

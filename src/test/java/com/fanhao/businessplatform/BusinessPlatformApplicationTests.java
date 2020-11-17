@@ -18,10 +18,13 @@ class BusinessPlatformApplicationTests {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private DataCreaterUtils dataCreaterUtils;
+
     @Test
     void contextLoads() {
-        for (int i = 0; i < 100; i++) {
-            System.out.println(DataCreaterUtils.getRandomName());
+        for (int i = 0; i < 150; i++) {
+            dataCreaterUtils.create();
         }
     }
 

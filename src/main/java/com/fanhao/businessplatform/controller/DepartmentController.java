@@ -5,6 +5,7 @@ import com.fanhao.businessplatform.entity.BO.DepartmentBO;
 import com.fanhao.businessplatform.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@Controller
+@Controller("department")
 @RequestMapping(value = "/department")
 public class DepartmentController {
     @Autowired
@@ -33,6 +34,13 @@ public class DepartmentController {
     @ResponseBody
     public CommonResult<List<DepartmentBO>> getAllDepartment(@RequestParam Integer page,
                                                              @RequestParam Integer limit) {
-        return departmentService.selectAllDepartment(page, limit);
+        CommonResult<List<DepartmentBO>> commonResult = departmentService.selectAllDepartment(page, limit);
+        return commonResult;
+    }
+
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public String test() {
+        return "测试Thymeleaf";
     }
 }

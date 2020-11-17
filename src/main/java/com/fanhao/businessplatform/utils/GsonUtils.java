@@ -32,8 +32,7 @@ public class GsonUtils {
             return result;
         }catch (Exception e){
             LOGGER.error("GsonUtils.parseStringToList() —— List反序列化失败");
-        }
-        return null;
+        }        return null;
     }
 
     /**

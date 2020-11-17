@@ -52,26 +52,34 @@
                 [
                 {type: 'checkbox', fixed: 'left'}
                 ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
-                ,{field:'username', title:'用户名', width:120, edit: 'text'}
-                ,{field:'name', title:'姓名', width:120, edit: 'text'}
-                ,{field:'address', title:'地址', width:120, edit: 'text'}
-                ,{field:'gender', title:'性别', width:120, edit: 'text',templet:function (employee) {
+                ,{field:'username', title:'用户名', width:120}
+                ,{field:'name', title:'姓名', width:120}
+                ,{field:'address', title:'地址', width:120}
+                ,{field:'gender', title:'性别', width: 120,templet:function (employee) {
                         if (employee.gender == 0){
                             return '男';
                         }else {
                             return '女';
                         }
                     }}
-                ,{field:'phone', title:'电话号码', width:120, edit: 'text'}
-                ,{field:'email', title:'邮箱', width:180, edit: 'text'}
-                ,{field:'department', title:'部门', width:120, edit: 'text', sort: true}
-                ,{field:'position', title:'职位', width:120, edit: 'text'}
+                ,{field:'phone', title:'电话号码', width:120}
+                ,{field:'email', title:'邮箱', width:180}
+                ,{field:'department', title:'部门', width:120, sort: true,templet:function (employee) {
+                        return employee.department.departmentName;
+                    }}
+                ,{field:'position', title:'职位', width:120}
                 ,{field:'role', title:'角色', width:100}
                 ,{field:'birthday', title:'生日', width:100,templet:"<div>{{layui.util.toDateString(d.birthday, 'yyyy-MM-dd')}}</div>"}
                 ,{field:'idCard', title:'员工卡号', width:120, sort: true}
                 ,{field:'school', title:'学校', width:120, sort: true}
                 ,{field:'contractStartDate', title:'入职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.contractStartDate, 'yyyy-MM-dd')}}</div>"}
-                ,{field:'quitDate', title:'离职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.quitDate, 'yyyy-MM-dd')}}</div>"}
+                ,{field:'quitDate', title:'离职日期', width:120, sort: true,templet:function (employee) {
+                        if (employee.quitDate == null){
+                            return "未离职";
+                        }else {
+                            return layui.util.toDateString(employee.quitDate, 'yyyy-MM-dd');
+                        }
+                    }}
                 ,{field:'workAge', title:'工龄', width:120, sort: true}
                 ,{field:'status', title:'状态', width:120,templet:function (employee) {
                         if (employee.status == false) {

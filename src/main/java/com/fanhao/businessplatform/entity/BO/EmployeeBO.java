@@ -51,6 +51,22 @@ public class EmployeeBO {
     public EmployeeBO(final Employee employee,
                       final Department department) {
         this.id = employee.getId();
-        
+        this.username = employee.getUsername();
+        this.password = employee.getPassword();
+        this.name = employee.getName();
+        this.address = employee.getAddress();
+        this.gender = employee.isGender();
+        this.phone = employee.getPhone();
+        this.email = employee.getEmail();
+        this.department = department;
+        this.position = employee.getPosition();
+        this.role = employee.getRole();
+        this.birthday = employee.getBirthday();
+        this.idCard = employee.getIdCard();
+        this.school = employee.getSchool();
+        this.contractStartDate = employee.getContractStartDate();
+        this.quitDate = employee.getQuitDate();
+        this.workAge = employee.getWorkAge();
+        this.remark = employee.getRemark();
     }
 }

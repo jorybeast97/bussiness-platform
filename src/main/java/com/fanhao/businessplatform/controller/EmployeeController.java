@@ -2,6 +2,7 @@ package com.fanhao.businessplatform.controller;
 
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.common.constant.ResultStatus;
+import com.fanhao.businessplatform.entity.BO.EmployeeBO;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Controller
+@Controller("employee")
 @RequestMapping(value = "/employee")
 public class EmployeeController {
     @Autowired
@@ -33,11 +34,23 @@ public class EmployeeController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<Employee>> employeeList(final HttpServletRequest request,
-                                     final HttpServletResponse response,
-                                     final Integer page,
-                                     final Integer limit) {
+    public CommonResult<List<EmployeeBO>> employeeList(final HttpServletRequest request,
+                                                       final HttpServletResponse response,
+                                                       final Integer page,
+                                                       final Integer limit) {
         return employeeService.selectList(page, limit);
+    }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<String> save(Integer id, String username, String password,
+                                     String name, String address, Boolean gender,
+                                     String phone, String email, Integer department,
+                                     String position, String role, String birthday,
+                                     String idCard, String school, String contractStartDate,
+                                     String quitDate, Integer workAge, Boolean status,
+                                     String remark) {
+        return employeeService.addEmployeeByArgs(id, username, password, name, address, gender, phone, email, department, position, role, birthday, idCard, school, contractStartDate, quitDate, workAge, status, remark);
     }
 
 }
