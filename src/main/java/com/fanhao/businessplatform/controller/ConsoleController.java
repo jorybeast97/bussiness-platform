@@ -1,6 +1,9 @@
 package com.fanhao.businessplatform.controller;
 
+import cn.hutool.core.util.RandomUtil;
+import com.fanhao.businessplatform.service.ConsoleService;
 import com.fanhao.businessplatform.utils.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,11 +13,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller("console")
 @RequestMapping("/console")
 public class ConsoleController {
+
+    @Autowired
+    private ConsoleService consoleService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String consolePage(Model model) throws UnknownHostException {
@@ -30,7 +37,9 @@ public class ConsoleController {
 
     @RequestMapping("/getInfo")
     @ResponseBody
-    public String getInfo() {
-        return "测试数据";
+    public HashMap<String,List<String>> getInfo() throws InterruptedException {
+
+        return consoleService.getEmployeeNumberOverview();
     }
+
 }

@@ -100,7 +100,7 @@
         <div class="layui-col-md8">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="fa fa-id-card-o"> 人数统计图</i>
+                    <i class="fa fa-id-card-o"> 企业员工统计</i>
                 </div>
                 <div class="layui-card-body">
                     <div id="department_number" style="width: 800px;height: 300px">
@@ -149,220 +149,229 @@
 <script th:src="@{../../static/js/layui/layui.js}"></script>
 <script>
     //JavaScript代码区域
-    layui.use('element', function(){
+    layui.use(['element','layer'], function(){
         var element = layui.element;
+        var $ = layui.jquery;
 
-    });
-    echarts.init(document.getElementById('department_number')).setOption({
-        title: {
-            text: ''
-        },
-        tooltip: {},
-        legend: {
-            data:['总人数','男性','女性']
-        },
-        xAxis: {
-            data: ["销售部","开发组","产品部","售后部","运营部","运维部","董事会"]
-        },
-        //
-        yAxis: {},
-        series: [
-            {
-                name: '总人数',
-                type: 'bar',
-                data: [133, 67, 54, 40, 69, 54, 12]
-            },
-            {
-                name: '男性',
-                type: 'bar',
-                data: [62, 51, 33, 24, 46, 33,8]
-            },
-            {
-                name: '女性',
-                type: 'bar',
-                data: [71, 16, 21, 16, 23, 21,4]
-            }
-        ]
-    });
-
-    echarts.init(document.getElementById("task_statistics")).setOption({
-        series : [
-            {
-                name: '任务统计',
-                type: 'pie',
-                radius: '60%',
-                roseType: 'angle',
-                data:[
-                    {value:235, name:'正在进行'},
-                    {value:274, name:'已完成'},
-                    {value:310, name:'准备中'},
-                    {value:335, name:'未开始'},
-                    {value:400, name:'已过期'}
+        $.get("/console/getInfo",function (result) {
+            echarts.init(document.getElementById('department_number')).setOption({
+                title: {
+                    text: ''
+                },
+                tooltip: {},
+                legend: {
+                    data:['总人数','男性','女性']
+                },
+                xAxis: {
+                    data: result.departmentName
+                },
+                //
+                yAxis: {},
+                series: [
+                    {
+                        name: '总人数',
+                        type: 'bar',
+                        data: result.all
+                        // [133, 67, 54, 40, 69, 54, 12]
+                    },
+                    {
+                        name: '男性',
+                        type: 'bar',
+                        data: result.man
+                        // data: [62, 51, 33, 24, 46, 33,8]
+                    },
+                    {
+                        name: '女性',
+                        type: 'bar',
+                        data: result.woman
+                        // data: [71, 16, 21, 16, 23, 21,4]
+                    }
                 ]
-            }
-        ]
-    })
+            });
+        })
 
-    var colors = ['#5793f3', '#d14a61', '#675bba'];
-    echarts.init(document.getElementById("user_add")).setOption({
-        color: colors,
-        tooltip: {
-            trigger: 'none',
-            axisPointer: {
-                type: 'cross'
-            }
-        },
-        legend: {
-            data:['2019年', '2020年']
-        },
-        grid: {
-            top: 70,
-            bottom: 50
-        },
-        xAxis: [
-            {
-                type: 'category',
-                axisTick: {
-                    alignWithLabel: true
-                },
-                axisLine: {
-                    onZero: false,
-                    lineStyle: {
-                        color: colors[1]
-                    }
-                },
-                axisPointer: {
-                    label: {
-                        formatter: function (params) {
-                            return '任务完成OKR  ' + params.value
-                                + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                        }
-                    }
-                },
-                data: ['2019-1', '2019-2', '2019-3', '2019-4', '2019-5', '2019-6', '2019-7', '2019-8', '2019-9', '2019-10', '2019-11', '2019-12']
-            },
-            {
-                type: 'category',
-                axisTick: {
-                    alignWithLabel: true
-                },
-                axisLine: {
-                    onZero: false,
-                    lineStyle: {
-                        color: colors[0]
-                    }
-                },
-                axisPointer: {
-                    label: {
-                        formatter: function (params) {
-                            return '任务完成OKR  ' + params.value
-                                + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                        }
-                    }
-                },
-                data: ['2020-1', '2020-2', '2020-3', '2020-4', '2020-5', '2020-6', '2020-7', '2020-8', '2020-9', '2020-10', '2020-11', '2020-12']
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value'
-            }
-        ],
-        series: [
-            {
-                name: '2019年',
-                type: 'line',
-                xAxisIndex: 1,
-                smooth: true,
-                data: [26.7, 15.9, 49.0, 126.4, 66.7, 70.7, 175.6, 182.2, 48.7, 90.8, 46.0, 112.3]
-            },
-            {
-                name: '2020年',
-                type: 'line',
-                smooth: true,
-                data: [113.9, 125.9, 110.1, 181.7, 99.3, 109.2, 231.6, 146.6, 155.4, 128.4, 103.3, 110.7]
-            }
-        ]
-    })
 
-    echarts.init(document.getElementById("test")).setOption(
-        {
+
+        echarts.init(document.getElementById("task_statistics")).setOption({
+            series : [
+                {
+                    name: '任务统计',
+                    type: 'pie',
+                    radius: '60%',
+                    roseType: 'angle',
+                    data:[
+                        {value:235, name:'正在进行'},
+                        {value:274, name:'已完成'},
+                        {value:310, name:'准备中'},
+                        {value:335, name:'未开始'},
+                        {value:400, name:'已过期'}
+                    ]
+                }
+            ]
+        })
+
+        var colors = ['#5793f3', '#d14a61', '#675bba'];
+        echarts.init(document.getElementById("user_add")).setOption({
+            color: colors,
             tooltip: {
-                trigger: 'axis',
-                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                trigger: 'none',
+                axisPointer: {
+                    type: 'cross'
                 }
             },
             legend: {
-                data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                data:['2019年', '2020年']
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
+                top: 70,
+                bottom: 50
             },
-            xAxis: {
-                type: 'value'
-            },
-            yAxis: {
-                type: 'category',
-                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-            },
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine: {
+                        onZero: false,
+                        lineStyle: {
+                            color: colors[1]
+                        }
+                    },
+                    axisPointer: {
+                        label: {
+                            formatter: function (params) {
+                                return '任务完成OKR  ' + params.value
+                                    + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                            }
+                        }
+                    },
+                    data: ['2019-1', '2019-2', '2019-3', '2019-4', '2019-5', '2019-6', '2019-7', '2019-8', '2019-9', '2019-10', '2019-11', '2019-12']
+                },
+                {
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine: {
+                        onZero: false,
+                        lineStyle: {
+                            color: colors[0]
+                        }
+                    },
+                    axisPointer: {
+                        label: {
+                            formatter: function (params) {
+                                return '任务完成OKR  ' + params.value
+                                    + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                            }
+                        }
+                    },
+                    data: ['2020-1', '2020-2', '2020-3', '2020-4', '2020-5', '2020-6', '2020-7', '2020-8', '2020-9', '2020-10', '2020-11', '2020-12']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
             series: [
                 {
-                    name: '直接访问',
-                    type: 'bar',
-                    stack: '总量',
-                    label: {
-                        show: true,
-                        position: 'insideRight'
-                    },
-                    data: [320, 302, 301, 334, 390, 330, 320]
+                    name: '2019年',
+                    type: 'line',
+                    xAxisIndex: 1,
+                    smooth: true,
+                    data: [26.7, 15.9, 49.0, 126.4, 66.7, 70.7, 175.6, 182.2, 48.7, 90.8, 46.0, 112.3]
                 },
                 {
-                    name: '邮件营销',
-                    type: 'bar',
-                    stack: '总量',
-                    label: {
-                        show: true,
-                        position: 'insideRight'
-                    },
-                    data: [120, 132, 101, 134, 90, 230, 210]
-                },
-                {
-                    name: '联盟广告',
-                    type: 'bar',
-                    stack: '总量',
-                    label: {
-                        show: true,
-                        position: 'insideRight'
-                    },
-                    data: [220, 182, 191, 234, 290, 330, 310]
-                },
-                {
-                    name: '视频广告',
-                    type: 'bar',
-                    stack: '总量',
-                    label: {
-                        show: true,
-                        position: 'insideRight'
-                    },
-                    data: [150, 212, 201, 154, 190, 330, 410]
-                },
-                {
-                    name: '搜索引擎',
-                    type: 'bar',
-                    stack: '总量',
-                    label: {
-                        show: true,
-                        position: 'insideRight'
-                    },
-                    data: [820, 832, 901, 934, 890, 1045, 1100]
+                    name: '2020年',
+                    type: 'line',
+                    smooth: true,
+                    data: [113.9, 125.9, 110.1, 181.7, 99.3, 109.2, 231.6, 146.6, 155.4, 128.4, 103.3, 110.7]
                 }
             ]
-        }
-    )
+        })
+
+        echarts.init(document.getElementById("test")).setOption(
+            {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value'
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                },
+                series: [
+                    {
+                        name: '直接访问',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [320, 302, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: '邮件营销',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: '联盟广告',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: '视频广告',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [150, 212, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: '搜索引擎',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [820, 832, 901, 934, 890, 1045, 1100]
+                    }
+                ]
+            }
+        )
+    });
+
 
     //轮播图
     layui.use(['carousel', 'form'], function() {
