@@ -15,21 +15,21 @@ public class Salary {
 
     private Integer employeeId;
 
-    private double baseSalary;
+    private Double baseSalary;
 
-    private double bonus;
+    private Double bonus;
 
-    private double mealSubsidy;
+    private Double mealSubsidy;
 
-    private double trafficSubsidy;
+    private Double trafficSubsidy;
 
-    private int rentSubsidy;
+    private Integer rentSubsidy;
 
-    private double additionalSalary;
+    private Double additionalSalary;
 
     private String remark;
 
-    private double totalSalary;
+    private Double totalSalary;
 
     private Date grantDate;
 }

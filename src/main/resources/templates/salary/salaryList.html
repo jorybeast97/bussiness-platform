@@ -8,7 +8,6 @@
     <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
 </head>
 <body class="layui-layout-body">
-
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
@@ -16,7 +15,7 @@
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
         <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
-        <button data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加员工</button>
+        <button data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加薪资信息</button>
     </div>
 </script>
 
@@ -30,12 +29,10 @@
 <script>
     layui.use(['table','layer'], function(){
         var table = layui.table;
-        var layer = layui.layer;
-        var $ = layui.jquery;
 
         table.render({
             elem: '#test'
-            ,url:'http://localhost:8081/employee/list'
+            ,url:'http://localhost:8081/salary/list'
             ,parseData: function (res) {
                 return {
                     "code" : res.code,
@@ -50,52 +47,26 @@
                 ,layEvent: 'LAYTABLE_TIPS'
                 ,icon: 'layui-icon-tips'
             }]
-            ,title: '用户数据表'
+            ,title: '部门数据表'
             ,cols: [
                 [
-                {type: 'checkbox', fixed: 'left'}
-                ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
-                ,{field:'username', title:'用户名', width:120}
-                ,{field:'name', title:'姓名', width:120}
-                ,{field:'address', title:'地址', width:120}
-                ,{field:'gender', title:'性别', width: 120,templet:function (employee) {
-                        if (employee.gender == 0){
-                            return '男';
-                        }else {
-                            return '女';
-                        }
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
+                    ,{field:'employee', title:'姓名', width:120, fixed: 'left', unresize: true, templet:function (salary) {
+                        if (salary.employee != null) return salary.employee.name;
                     }}
-                ,{field:'phone', title:'电话号码', width:120}
-                ,{field:'email', title:'邮箱', width:180}
-                ,{field:'department', title:'部门', width:120, sort: true,templet:function (employee) {
-                        return employee.department.departmentName;
+                    ,{field:'baseSalary', title:'基础薪资', width:150, edit: 'text'}
+                    ,{field:'bonus', title:'奖金', width:150, edit: 'text'}
+                    ,{field:'mealSubsidy', title:'餐饮补助', width:150, edit: 'text'}
+                    ,{field:'trafficSubsidy', title:'交通补助', width:150, edit: 'text'}
+                    ,{field:'rentSubsidy', title:'房租补助', width:150, edit: 'text'}
+                    ,{field:'additionalSalary', title:'额外补助', width:150, edit: 'text'}
+                    ,{field:'remark', title:'备注', width:150, edit: 'text'}
+                    ,{field:'totalSalary', title:'总和', width:150, edit: 'text'}
+                    ,{field:'grantDate', title:'发放日期', width:150, edit: 'text',templet:function (salary) {
+                        return layui.util.toDateString(salary.grantDate, 'yyyy-MM-dd');
                     }}
-                ,{field:'position', title:'职位', width:120}
-                ,{field:'role', title:'角色', width:100,templet: function (employee) {
-                        if (employee.role == 'normal') return '普通账号';
-                        else return '管理员';
-                    }}
-                ,{field:'birthday', title:'生日', width:100,templet:"<div>{{layui.util.toDateString(d.birthday, 'yyyy-MM-dd')}}</div>"}
-                ,{field:'idCard', title:'员工卡号', width:120, sort: true}
-                ,{field:'school', title:'学校', width:120, sort: true}
-                ,{field:'contractStartDate', title:'入职日期', width:120, sort: true,templet:"<div>{{layui.util.toDateString(d.contractStartDate, 'yyyy-MM-dd')}}</div>"}
-                ,{field:'quitDate', title:'离职日期', width:120, sort: true,templet:function (employee) {
-                        if (employee.quitDate == null){
-                            return "未离职";
-                        }else {
-                            return layui.util.toDateString(employee.quitDate, 'yyyy-MM-dd');
-                        }
-                    }}
-                ,{field:'workAge', title:'工龄', width:120, sort: true}
-                ,{field:'status', title:'状态', width:120,templet:function (employee) {
-                        if (employee.status == false) {
-                            return '激活';
-                        }else {
-                            return '冻结';
-                        }
-                    }}
-                ,{field:'remark', title:'备注', width:120}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
                 ]
             ]
             ,page: true
@@ -128,10 +99,59 @@
 
         //监听行工具事件
         table.on('tool(test)', function(obj){
+            var data = obj.data;
+            //console.log(obj)
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                layer.prompt({
+                    formType: 2
+                    ,value: data.email
+                }, function(value, index){
+                    obj.update({
+                        email: value
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        var active = {
+            offset: function (othis) {
+                var type = othis.data('type')
+                    ,text = othis.text();
+                var type = othis.data('type'),
+                    text = othis.text();
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: '添加薪资信息' //不显示标题栏
+                    ,area: ['60%','68%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    , content: '/salary/add'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    , yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        }
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
             var id = obj.data.id;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
-                    $.get("/employee/delete", {id: id}, function (response) {
+                    $.get("/salary/delete", {id: id}, function (response) {
                         layer.msg(response.message);
                         if (response.code == 200){
                             obj.del();
@@ -144,48 +164,20 @@
                 layer.open({
                     type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
                     ,offset: 'auto'
-                    ,title: "修改员工信息" //不显示标题栏
-                    ,area: ['90%','90%']//定义宽高
+                    ,title: "修改信息薪资" //不显示标题栏
+                    ,area: ['60%','68%']//定义宽高
                     ,shade: 0.8//遮幕
                     ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
                     ,btn: '关闭窗口'
                     ,btnAlign: 'c'//按钮排列：居中对齐
                     ,moveType: 1 //拖拽模式，0或者1
-                    ,content: '/employee/editemployee?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,content: '/salary/edit?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
                     ,yes : function () {
                         layer.closeAll();
                     }
                 });
             }
         });
-
-
-
-        var active = {
-            offset: function (othis) {
-                var type = othis.data('type')
-                    ,text = othis.text();
-                var type = othis.data('type'),
-                    text = othis.text();
-                layer.open({
-                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
-                    ,offset: type
-                    ,title: '添加员工信息' //不显示标题栏
-                    ,closeBtn: false
-                    ,area: ['90%','90%']//定义宽高
-                    ,shade: 0.8//遮幕
-                    ,id: 'LAY_layuipro' + type//设定一个id，防止重复弹出
-                    ,btn: '关闭窗口'
-                    ,btnAlign: 'c'//按钮排列：居中对齐
-                    ,moveType: 1 //拖拽模式，0或者1
-                    ,content: '/employee/addemployee'//跳转到想要的界面，这里是我自己项目的跳转界面
-                    ,
-                    yes : function () {
-                        layer.closeAll();
-                    }
-                });
-            }
-        }
 
         $('#layerDemo .layui-btn').on('click', function(){
             var othis = $(this), method = othis.data('method');
