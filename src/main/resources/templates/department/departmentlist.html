@@ -124,44 +124,58 @@
             offset: function (othis) {
                 var type = othis.data('type')
                     ,text = othis.text();
-
-                // layer.open({
-                //     type: 1
-                //     ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-                //     ,id: 'layerDemo'+type //防止重复弹出
-                //     ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
-                //     ,btn: '关闭全部'
-                //     ,btnAlign: 'c' //按钮居中
-                //     ,shade: 0 //不显示遮罩
-                //     ,yes: function(){
-                //         layer.closeAll();
-                //     }
-                // });
                 var type = othis.data('type'),
                     text = othis.text();
                 layer.open({
                     type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
-                    ,offset: type
-                    ,title: false //不显示标题栏
-                    ,closeBtn: false
-                    ,area: ['90%','80%']//定义宽高
+                    ,offset: 'auto'
+                    ,title: '添加部门' //不显示标题栏
+                    ,area: ['60%','68%']//定义宽高
                     ,shade: 0.8//遮幕
-                    ,id: 'LAY_layuipro' + type//设定一个id，防止重复弹出
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
                     ,btn: '关闭窗口'
                     ,btnAlign: 'c'//按钮排列：居中对齐
                     ,moveType: 1 //拖拽模式，0或者1
-                    ,content: 'http://localhost:8081/employee/addemployee'//跳转到想要的界面，这里是我自己项目的跳转界面
-                    // ,
-                    // success: function (layero) {
-                    //     var btn = layero.find('.layui-layer-btn');
-                    //     btn.find('.layui-layer-btn0').attr({
-                    //         href: ''
-                    //         , target: '_blank'
-                    //     });
-                    // }
+                    , content: '/department/adddepartment'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    , yes : function () {
+                        layer.closeAll();
+                    }
                 });
             }
         }
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var id = obj.data.id;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.get("/department/delete", {id: id}, function (response) {
+                        layer.msg(response.message);
+                        if (response.code == 200){
+                            obj.del();
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                //弹出编辑页面
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: "修改员工信息" //不显示标题栏
+                    ,area: ['60%','68%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '/department/editdepartment?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
 
         $('#layerDemo .layui-btn').on('click', function(){
             var othis = $(this), method = othis.data('method');

@@ -15,33 +15,38 @@
         <div class="layui-form-item" style="width: 95%">
             <label class="layui-form-label">部门名称</label>
             <div class="layui-input-block">
-                <input type="text" name="departmentName" lay-verify="required" autocomplete="off" placeholder="请填写真实" class="layui-input">
+                <input type="hidden" name="id" th:value="${department_info.id}">
+                <input type="text" th:value="${department_info.getDepartmentName()}" name="departmentName" lay-verify="required" autocomplete="off" placeholder="请填写真实地址" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item" style="width: 95%">
-                <label class="layui-form-label">负责人</label>
-                <div class="layui-input-block">
-                    <select name="departmentLeader" lay-verify="required" lay-search=""
-                            th:with="employeelist=${@employee.employeeList(1,10000).getData()}">
-                        <option value="1" selected="">请选择</option>
-                        <option th:each="employee : ${employeelist}"
-                                th:text="${employee.getName() + ' - ' +employee.getPosition() + ' : ' + employee.getIdCard()}"
-                                th:value="${employee.getId()}">
-                        </option>
-                    </select>
-                </div>
+            <label class="layui-form-label">负责人</label>
+            <div class="layui-input-block">
+                <select name="departmentLeader" lay-verify="required" lay-search=""
+                        th:with="employeelist=${@employee.employeeList(1,10000).getData()}">
+                    <option th:value="${department_info.getDepartmentLeader().getId()}"
+                            th:text="${department_info.getDepartmentLeader().getName() + ' - ' +
+                            department_info.getDepartmentLeader().getPosition() + ' : ' +
+                            department_info.getDepartmentLeader().getIdCard()
+                            }" selected=""></option>
+                    <option th:each="employee : ${employeelist}"
+                            th:text="${employee.getName() + ' - ' +employee.getPosition() + ' : ' + employee.getIdCard()}"
+                            th:value="${employee.getId()}">
+                    </option>
+                </select>
+            </div>
         </div>
         <div class="layui-form-item" style="width: 95%">
             <label class="layui-form-label">负责区域</label>
             <div class="layui-input-block">
-                <input type="text" name="departmentRegion" lay-verify="required" autocomplete="off" placeholder="详细到街道编号" class="layui-input">
+                <input type="text" th:value="${department_info.getDepartmentRegion()}" name="departmentRegion" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item layui-form-text" style="width: 95%">
             <label class="layui-form-label">部门简述</label>
             <div class="layui-input-block">
-                <textarea name="description" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="description"  th:value="${department_info.getDescription()}" placeholder="请输入内容" class="layui-textarea"></textarea>
             </div>
         </div>
 

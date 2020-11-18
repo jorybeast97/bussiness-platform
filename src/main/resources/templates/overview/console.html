@@ -36,13 +36,13 @@
                     <div style="margin-top: 3px">
                         <i class="layui-icon layui-icon-engine" style="font-size: 100%;color: gray"> CPU占用率</i>
                         <div class="layui-progress" style="margin-top: 5px">
-                            <div class="layui-progress-bar layui-bg-orange" lay-percent="34%"></div>
+                            <div class="layui-progress-bar layui-bg-orange" th:lay-percent="${cpu_info}"></div>
                         </div>
                     </div>
                     <div style="margin-top: 5px">
                         <i class="layui-icon layui-icon-console" style="font-size: 100%;color: gray"> 内存占用率</i>
                         <div class="layui-progress" style="margin-top: 5px">
-                            <div class="layui-progress-bar layui-bg-green" lay-percent="66%"></div>
+                            <div class="layui-progress-bar layui-bg-green" th:lay-percent="${memory_info}"></div>
                         </div>
                     </div>
                     <div style="margin-top: 5px">
@@ -78,12 +78,12 @@
                             <td>0.0.1-SNAPSHOT</td>
                         </tr>
                         <tr>
-                            <td>更新时间</td>
-                            <td>2020-11-11</td>
+                            <td>本机信息</td>
+                            <td th:text="${localhost}"></td>
                         </tr>
                         <tr>
-                            <td>开发者</td>
-                            <td>范昊</td>
+                            <td>运行环境</td>
+                            <td th:text="${jdk_version}"></td>
                         </tr>
                         <tr>
                             <td>电子邮箱</td>
@@ -153,7 +153,6 @@
         var element = layui.element;
 
     });
-
     echarts.init(document.getElementById('department_number')).setOption({
         title: {
             text: ''
@@ -165,12 +164,13 @@
         xAxis: {
             data: ["销售部","开发组","产品部","售后部","运营部","运维部","董事会"]
         },
+        //
         yAxis: {},
         series: [
             {
                 name: '总人数',
                 type: 'bar',
-                data: [133, 67, 54, 40, 69, 54,12]
+                data: [133, 67, 54, 40, 69, 54, 12]
             },
             {
                 name: '男性',

@@ -2,6 +2,7 @@ package com.fanhao.businessplatform.controller;
 
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.entity.BO.DepartmentBO;
+import com.fanhao.businessplatform.entity.Department;
 import com.fanhao.businessplatform.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,17 @@ public class DepartmentController {
         return "/department/departmentlist";
     }
 
-    @RequestMapping(value = "/selectbyid", method = RequestMethod.GET)
-    @ResponseBody
-    public CommonResult<DepartmentBO> getDepartmentBOById(@RequestParam Integer id) {
-        return departmentService.selectDepartmentById(id);
+    @RequestMapping(value = "/adddepartment")
+    public String addDepartmentPage() {
+        return "/department/addDepartment";
+    }
+
+    @RequestMapping(value = "/editdepartment")
+    public String addDepartment(Integer id,
+                                Model model) {
+        DepartmentBO departmentBO = departmentService.selectDepartmentById(id).getData();
+        model.addAttribute("department_info", departmentBO);
+        return "/department/editDepartment";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -38,9 +46,19 @@ public class DepartmentController {
         return commonResult;
     }
 
-    @RequestMapping(value = "/test")
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public String test() {
-        return "测试Thymeleaf";
+    public CommonResult<String> addOrUpdateDepartment(Integer id,
+                                                      String departmentName,
+                                                      String departmentRegion,
+                                                      String description,
+                                                      Integer departmentLeader) {
+        return departmentService.addOrUpdateDepartment(id, departmentName, departmentRegion, description, departmentLeader);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<String> delete(Integer id) {
+        return departmentService.deleteDepartment(id);
     }
 }

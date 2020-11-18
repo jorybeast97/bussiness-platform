@@ -41,9 +41,7 @@ public class EmployeeController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<EmployeeBO>> employeeList(final HttpServletRequest request,
-                                                       final HttpServletResponse response,
-                                                       final Integer page,
+    public CommonResult<List<EmployeeBO>> employeeList(final Integer page,
                                                        final Integer limit) {
 
         return employeeService.selectList(page, limit);

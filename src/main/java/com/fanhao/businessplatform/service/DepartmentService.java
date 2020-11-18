@@ -26,12 +26,35 @@ public class DepartmentService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
-    public boolean addDepartment(final Department department) {
-        return departmentMapper.insert(department) > 0;
+    public CommonResult<String> addOrUpdateDepartment(Integer id,
+                                                      String departmentName,
+                                                      String departmentRegion,
+                                                      String description,
+                                                      Integer departmentLeader) {
+        Department department = generateDepartment(id, departmentName, departmentRegion, description, departmentLeader);
+        CommonResult<String> commonResult = new CommonResult<>();
+        if (department.getId() == null) {
+            departmentMapper.insert(department);
+            commonResult.setMessage("新增成功");
+        }else {
+            departmentMapper.updateById(department);
+            commonResult.setMessage("更新成功");
+        }
+        return commonResult;
     }
 
-    public boolean deleteDepartment(final Integer id) {
-        return departmentMapper.deleteById(id) > 0;
+    public CommonResult<String> deleteDepartment(final Integer id) {
+        CommonResult<String> commonResult = new CommonResult<>();
+        if (id == null) {
+            commonResult.setMessage("员工不存在");
+            commonResult.setCode(ResultStatus.FAILED.getResultCode());
+        }
+        else {
+            departmentMapper.deleteById(id);
+            commonResult.setMessage("删除成功");
+            commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
+        }
+        return commonResult;
     }
 
     public boolean updateDepartment(final Department department) {
@@ -70,5 +93,19 @@ public class DepartmentService {
             return new DepartmentBO(department, employee);
         }
         return new DepartmentBO(department, null);
+    }
+
+    public Department generateDepartment(Integer id,
+                                         String departmentName,
+                                         String departmentRegion,
+                                         String description,
+                                         Integer departmentLeader) {
+        Department department = new Department();
+        department.setId(id);
+        department.setDepartmentName(departmentName);
+        department.setDepartmentRegion(departmentRegion);
+        department.setDescription(description);
+        department.setDepartmentLeader(departmentLeader);
+        return department;
     }
 }

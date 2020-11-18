@@ -22,9 +22,8 @@
                     范昊
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">个人资料</a></dd>
-                    <dd><a href="">修改密码</a></dd>
-                    <dd><a href="">退出登录</a> </dd>
+                    <dd><a href="javascript:;" onclick="modifyPersonInfo()">修改信息</a></dd>
+                    <dd><a href="javascript:;" onclick="logout()">退出登录</a> </dd>
                 </dl>
             </li>
         </ul>
@@ -101,13 +100,37 @@
 </div>
 <!--引入echarts-->
 <script th:src="@{../static/js/echart/echarts.min.js}"></script>
-<script th:src="@{../static/js/layui/layui.js}"></script>
+<script th:src="@{../static/js/layui/layui.all.js}"></script>
 <script>
     //JavaScript代码区域
-    layui.use('element', function(){
-        var element = layui.element;
+    // layui.use('element', function(){
+    //     var element = layui.element;
+    //
+    // });
 
-    });
+    var layer = layui.layer;
+
+    function modifyPersonInfo(){
+        layer.open({
+            type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+            ,offset: 'auto'
+            ,title: "修改员工信息" //不显示标题栏
+            ,area: ['90%','90%']//定义宽高
+            ,shade: 0.8//遮幕
+            ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+            ,btn: '关闭窗口'
+            ,btnAlign: 'c'//按钮排列：居中对齐
+            ,moveType: 1 //拖拽模式，0或者1
+            ,content: '/employee/addemployee'
+            ,yes : function () {
+                layer.closeAll();
+            }
+        });
+    }
+    
+    function logout() {
+        window.location.href = "/loginAction";
+    }
 
 
 
