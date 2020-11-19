@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
-    public static final String TOKEN = "jwt-token";
+
     //默认Cookie生命周期，7天
     public static final int DEFAULT_COOKIE_EXPIRE_TIME = 7 * 24 * 60 * 60;
     public static final String BAIDU_API_AK = "ZGaZoGpHnCQxRMISfbYhxMm4GDRva1dp";

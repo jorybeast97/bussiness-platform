@@ -39,47 +39,6 @@ public class EmployeeService {
     @Autowired
     private DepartmentMapper departmentMapper;
 
-    /**
-     * 登录操作
-     * @param request
-     * @param response
-     * @param username
-     * @param password
-     * @return
-     */
-    public CommonResult<String> login(final HttpServletRequest request,
-                                      final HttpServletResponse response,
-                                      final String username,
-                                      final String password) {
-        boolean isSuccess = employeeInfoCheck(username, password);
-        CommonResult<String> commonResult = new CommonResult<>();
-        if (!isSuccess) {
-            commonResult.setCode(ResultStatus.FAILED.getResultCode());
-            commonResult.setMessage(ResultStatus.FAILED.getStatus());
-            return commonResult;
-        }
-        LOGGER.info("用户 : " + username + " 登录成功，IP地址为 : " + request.getRemoteHost());
-        commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
-        commonResult.setMessage(ResultStatus.SUCCESS.getAttachMessage());
-        return commonResult;
-    }
-
-    /**
-     * 校验用户信息，过程中使用MD5进行加密
-     * @param username
-     * @param password 明文密码
-     * @return
-     */
-    public boolean employeeInfoCheck(final String username, final String password) {
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return false;
-        //MD5加密密码
-        String md5Password = SecureUtil.md5(password);
-        QueryWrapper<Employee> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", username)
-                .eq("password", md5Password);
-        return employeeMapper.selectCount(wrapper) > 0;
-    }
-
     public boolean addEmployee(final Employee employee) {
         if (employee == null) return false;
         if (checkUsernameExist(employee.getUsername())) return false;

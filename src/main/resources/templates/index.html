@@ -103,9 +103,13 @@
             }
         });
     }
-    
+
+    var $ = layui.jquery;
     function logout() {
-        window.location.href = "/loginAction";
+        $.get("/logout",function (response) {
+            window.location.href = "/login";
+            layer.msg("退出登录成功")
+        })
     }
 
 

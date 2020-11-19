@@ -2,6 +2,7 @@ package com.fanhao.businessplatform.enhance;
 
 import com.fanhao.businessplatform.enhance.annotation.PermissionVerification;
 import com.fanhao.businessplatform.utils.HttpUtils;
+import com.fanhao.businessplatform.utils.PermissionUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -33,9 +34,6 @@ public class PermissionFilter {
 
     @Before("getPermissionAnnotationPoint() && @annotation(annotation)")
     private void checkPermission(PermissionVerification annotation) {
-        String token = HttpUtils.getCookie(httpServletRequest, HttpUtils.TOKEN);
-        if (StringUtils.isEmpty(token)) System.out.println("未登录");
-        else if (!token.equals(annotation.role())) System.out.println("权限不足");
-        else System.out.println("访问成功");
+
     }
 }

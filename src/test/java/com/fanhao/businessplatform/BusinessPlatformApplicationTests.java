@@ -29,7 +29,7 @@ class BusinessPlatformApplicationTests {
 
     @Test
     void contextLoads() {
-        Map<String, String> addressMap = HttpUtils.getIpAddressInformation("60.2.111.28");
+        Map<String, String> addressMap = HttpUtils.getIpAddressInformation("36.98.246.112");
         System.out.println(addressMap.get("province") + addressMap.get("city"));
     }
 
