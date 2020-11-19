@@ -90,7 +90,7 @@
         <div class="layui-form-item layui-form-text" style="width: 85%">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <textarea name="remark" th:value="${salaryInfo.getRemark()}" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="remark" th:value="${salaryInfo.getRemark()}"  th:text="${salaryInfo.getRemark()}" class="layui-textarea"></textarea>
             </div>
         </div>
 

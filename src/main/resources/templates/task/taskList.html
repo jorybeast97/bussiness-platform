@@ -15,7 +15,7 @@
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
         <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
-        <button data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加薪资信息</button>
+        <button data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加任务</button>
     </div>
 </script>
 
@@ -32,7 +32,7 @@
 
         table.render({
             elem: '#test'
-            ,url:'http://localhost:8081/salary/list'
+            ,url:'http://localhost:8081/task/list'
             ,parseData: function (res) {
                 return {
                     "code" : res.code,
@@ -52,19 +52,31 @@
                 [
                     {type: 'checkbox', fixed: 'left'}
                     ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
-                    ,{field:'employee', title:'姓名', width:120, fixed: 'left', unresize: true, templet:function (salary) {
-                        if (salary.employee != null) return salary.employee.name;
+                    ,{field:'taskName', title:'任务名称', width:150}
+                    ,{field:'taskContent', title:'任务内容', width:150}
+                    ,{field:'sender', title:'任务创建人', width:150,templet:function (task) {
+                        return task.sender.name;
                     }}
-                    ,{field:'baseSalary', title:'基础薪资', width:150}
-                    ,{field:'bonus', title:'奖金', width:150}
-                    ,{field:'mealSubsidy', title:'餐饮补助', width:150}
-                    ,{field:'trafficSubsidy', title:'交通补助', width:150}
-                    ,{field:'rentSubsidy', title:'房租补助', width:150}
-                    ,{field:'additionalSalary', title:'额外补助', width:150}
-                    ,{field:'remark', title:'备注', width:150}
-                    ,{field:'totalSalary', title:'总和', width:150}
-                    ,{field:'grantDate', title:'发放日期', width:150, edit: 'text',templet:function (salary) {
-                        return layui.util.toDateString(salary.grantDate, 'yyyy-MM-dd');
+                    ,{field:'receiver', title:'任务执行人', width:200,templet:function (task) {
+                        return task.receiver.name;
+                    }}
+                    ,{field:'taskStatus', title:'任务状态', width:120,templet:function (task) {
+                        if (task.taskStatus == 1) return "未开始";
+                        if (task.taskStatus == 2) return "准备中";
+                        if (task.taskStatus == 3) return "正在进行";
+                        if (task.taskStatus == 4) return "已完成";
+                        if (task.taskStatus == 5) return "失败";
+                    }}
+                    ,{field:'remark', title:'任务备注', width:200}
+                    ,{field:'createDate', title:'创建日期', width:200 ,templet: function (task) {
+                        return layui.util.toDateString(task.createDate, 'yyyy-MM-dd');
+                    }}
+                    ,{field:'createDate', title:'截至日期', width:200 ,templet: function (task) {
+                        if (task.endDate != null) {
+                            return layui.util.toDateString(task.endDate, 'yyyy-MM-dd');
+                        }else {
+                            return "无日期限制";
+                        }
                     }}
                     ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
                 ]
@@ -97,28 +109,6 @@
             };
         });
 
-        //监听行工具事件
-        table.on('tool(test)', function(obj){
-            var data = obj.data;
-            //console.log(obj)
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    obj.del();
-                    layer.close(index);
-                });
-            } else if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.email
-                }, function(value, index){
-                    obj.update({
-                        email: value
-                    });
-                    layer.close(index);
-                });
-            }
-        });
-
         var layer = layui.layer;
         var $ = layui.jquery;
 
@@ -131,14 +121,14 @@
                 layer.open({
                     type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
                     ,offset: 'auto'
-                    ,title: '添加薪资信息' //不显示标题栏
-                    ,area: ['60%','68%']//定义宽高
+                    ,title: '添加任务信息' //不显示标题栏
+                    ,area: ['70%','80%']//定义宽高
                     ,shade: 0.8//遮幕
                     ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
                     ,btn: '关闭窗口'
                     ,btnAlign: 'c'//按钮排列：居中对齐
                     ,moveType: 1 //拖拽模式，0或者1
-                    , content: '/salary/add'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    , content: '/task/add'//跳转到想要的界面，这里是我自己项目的跳转界面
                     , yes : function () {
                         layer.closeAll();
                     }
@@ -151,7 +141,7 @@
             var id = obj.data.id;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
-                    $.get("/salary/delete", {id: id}, function (response) {
+                    $.get("/task/delete", {id: id}, function (response) {
                         layer.msg(response.message);
                         if (response.code == 200){
                             obj.del();
@@ -164,14 +154,14 @@
                 layer.open({
                     type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
                     ,offset: 'auto'
-                    ,title: "修改信息薪资" //不显示标题栏
+                    ,title: "修改任务信息" //不显示标题栏
                     ,area: ['60%','68%']//定义宽高
                     ,shade: 0.8//遮幕
                     ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
                     ,btn: '关闭窗口'
                     ,btnAlign: 'c'//按钮排列：居中对齐
                     ,moveType: 1 //拖拽模式，0或者1
-                    ,content: '/salary/edit?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,content: '/task/edit?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
                     ,yes : function () {
                         layer.closeAll();
                     }

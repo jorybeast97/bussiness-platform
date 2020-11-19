@@ -23,6 +23,7 @@ public class ConsoleService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+
     /**
      * 整合员工人数，男女，部门等相关信息
      * @return

@@ -45,15 +45,7 @@
                     <dl class="layui-nav-child">
                         <dd><a href="/employee/" target="content_iframe"> 员工信息</a></dd>
                         <dd><a href="/department/" target="content_iframe"> 部门信息</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a href="JavaScript:">
-                        <i class="fa fa-money"> 薪资信息</i>
-                    </a>
-                    <dl class="layui-nav-child">
                         <dd><a href="/salary/" target="content_iframe"> 薪资列表</a></dd>
-                        <dd><a href=""> 报表分析</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
@@ -61,17 +53,8 @@
                         <i class="fa fa-tasks"> 任务流程</i>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href=""> 任务列表</a></dd>
+                        <dd><a href="/task/" target="content_iframe"> 任务列表</a></dd>
                         <dd><a href=""> 任务状态</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a href="JavaScript:">
-                        <i class="fa fa-commenting"> 信息备注</i>
-                    </a>
-                    <dl class="layui-nav-child">
-                        <dd><a href=""> 消息通知</a></dd>
-                        <dd><a href=""> 备忘录</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
@@ -80,7 +63,6 @@
                     </a>
                     <dl class="layui-nav-child">
                         <dd><a href=""> 操作日志</a></dd>
-                        <dd><a href=""> 异常日志</a></dd>
                         <dd><a href=""> 系统日志</a></dd>
                     </dl>
                 </li>
@@ -102,12 +84,6 @@
 <script th:src="@{../static/js/echart/echarts.min.js}"></script>
 <script th:src="@{../static/js/layui/layui.all.js}"></script>
 <script>
-    //JavaScript代码区域
-    // layui.use('element', function(){
-    //     var element = layui.element;
-    //
-    // });
-
     var layer = layui.layer;
 
     function modifyPersonInfo(){
