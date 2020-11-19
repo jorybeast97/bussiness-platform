@@ -11,6 +11,8 @@ import com.fanhao.businessplatform.utils.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,12 +20,15 @@ import java.io.IOException;
 
 @Service("loginService")
 public class LoginService {
+    //默认Cookie有效时间为三天
+    private static final int COOKIE_EXPIRE_TIME = 60 * 60 * 24 * 3;
 
     @Autowired
     private EmployeeMapper employeeMapper;
 
     /**
      * 登录
+     *
      * @param username
      * @param password 明文密码
      * @return
@@ -33,7 +38,7 @@ public class LoginService {
                                            final String username,
                                            final String password) {
         CommonResult<String> commonResult = new CommonResult<>();
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             commonResult.setCode(ResultStatus.FAILED.getResultCode());
             commonResult.setMessage("用户名或密码不能为空");
             return commonResult;
@@ -43,14 +48,16 @@ public class LoginService {
         QueryWrapper<Employee> wrapper = new QueryWrapper<>();
         wrapper.eq("username", username)
                 .eq("password", md5Password);
-        boolean success = employeeMapper.selectCount(wrapper) > 0;
-        if (!success){
+        Employee employee = employeeMapper.selectOne(wrapper);
+        boolean success = employee == null ? false : true;
+        if (!success) {
             commonResult.setCode(ResultStatus.FAILED.getResultCode());
             commonResult.setMessage("用户名或密码错误");
             return commonResult;
         }
         //登陆成功后，将TOKEN写入Cookie
-        HttpUtils.writeCookie(response, PermissionUtils.JWT_TOKEN_USERNAME, username, 3600 * 24);
+        final String jwtToken = generateEmployeeToken(request, response, employee);
+        HttpUtils.writeCookie(response, PermissionUtils.TOKEN, jwtToken, LoginService.COOKIE_EXPIRE_TIME);
         commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
         commonResult.setMessage("登录成功");
         return commonResult;
@@ -59,5 +66,15 @@ public class LoginService {
     public void Logout(final HttpServletRequest request,
                        final HttpServletResponse response) {
         HttpUtils.writeCookie(response, PermissionUtils.JWT_TOKEN_USERNAME, "", 0);
+    }
+
+    public String generateEmployeeToken(final HttpServletRequest request,
+                                        final HttpServletResponse response,
+                                        final Employee employee) {
+        String username = employee.getUsername();
+        String name = employee.getName();
+        String role = employee.getRole();
+        String token = PermissionUtils.generateJWT(username, role, name, PermissionUtils.DEFAULT_TOKEN_EXPIRE_TIME, null);
+        return token;
     }
 }

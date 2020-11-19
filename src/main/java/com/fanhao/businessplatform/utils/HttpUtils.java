@@ -3,16 +3,16 @@ package com.fanhao.businessplatform.utils;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
@@ -37,13 +37,19 @@ public class HttpUtils {
         Map initMap = gson.fromJson(addressJson, Map.class);
         String status = String.valueOf(initMap.get("status"));
         Map<String, String> addressMap = new HashMap<>();
-        if (status.equals("1")){
+        if (status.equals("1.0")){
             LOGGER.warn("getIpAddressInformation - 无法查明请求来源IP所属:" + ip);
             return null;
         }else {
-            Map content = (Map) initMap.get("content");
-            Map addressDetail = (Map) content.get("address_detail");
-            Map point = (Map) content.get("point");
+            Map addressDetail = null;
+            Map point = null;
+            try {
+                Map content = (Map) initMap.get("content");
+                addressDetail = (Map) content.get("address_detail");
+                point = (Map) content.get("point");
+            } catch (Exception e) {
+                return null;
+            }
             addressMap.put("province", (String) addressDetail.get("province"));
             addressMap.put("city", (String) addressDetail.get("city"));
             addressMap.put("x", (String) point.get("x"));
@@ -96,7 +102,16 @@ public class HttpUtils {
         response.addCookie(cookie);
     }
 
+    public static String getLocalHost() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String getIpAddress(final HttpServletRequest request) {
-        return request.getRemoteHost();
+        return request.getRemoteAddr();
     }
 }

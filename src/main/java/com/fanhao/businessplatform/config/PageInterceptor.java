@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Service("pageInterceptor")
 public class PageInterceptor implements HandlerInterceptor {
@@ -21,9 +22,12 @@ public class PageInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (HttpUtils.getCookie(request, PermissionUtils.JWT_TOKEN_USERNAME) == null) {
+        final String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
+        if (token == null) {
             response.sendRedirect("/login");
+            return false;
         }
+        Map<String, String> tokenInfo = PermissionUtils.getClaimsInformation(token);
         return true;
     }
 }

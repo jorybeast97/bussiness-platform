@@ -51,6 +51,7 @@ public class PermissionUtils {
         Map<String, Object> payload = new HashMap<>();
         payload.put(JWT_TOKEN_USERNAME, username);
         payload.put(JWT_TOKEN_ROLE, role);
+        payload.put(JWT_TOKEN_NAME, name);
         jwtBuilder = newInstanceBuilder();
         if (additionalInfo != null) jwtBuilder.setClaims(additionalInfo);
         String token = jwtBuilder

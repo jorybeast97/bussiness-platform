@@ -5,12 +5,15 @@ import com.fanhao.businessplatform.entity.Department;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.mapper.DepartmentMapper;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
+import com.fanhao.businessplatform.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 为首页提供展示信息
@@ -23,6 +26,13 @@ public class ConsoleService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    public String getIpAddress(final HttpServletRequest request) {
+        Map<String, String> map = HttpUtils.getIpAddressInformation(HttpUtils.getIpAddress(request));
+        if (map == null){
+            return "未检测到本机地址";
+        }
+        return map.get("province") + map.get("city");
+    }
 
     /**
      * 整合员工人数，男女，部门等相关信息

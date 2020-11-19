@@ -18,8 +18,7 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img th:src="@{../static/image/El Capitan.jpg}" class="layui-nav-img">
-                    范昊
+                    <img th:src="@{../static/image/El Capitan.jpg}" class="layui-nav-img">[[${name}]]
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" onclick="modifyPersonInfo()">修改信息</a></dd>
@@ -63,7 +62,7 @@
                     </a>
                     <dl class="layui-nav-child">
                         <dd><a href=""> 操作日志</a></dd>
-                        <dd><a href=""> 系统日志</a></dd>
+                        <dd><a href="/exceptionlog/" target="content_iframe"> 异常日志</a></dd>
                     </dl>
                 </li>
             </ul>
