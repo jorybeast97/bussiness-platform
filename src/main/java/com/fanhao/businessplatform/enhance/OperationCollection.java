@@ -61,7 +61,7 @@ public class OperationCollection {
             operationLog.setAddress(address);
             operationLog.setDescription(annotation.operation());
             operationLog.setOperationTime(new Date());
-            employeeService.addEmployee(employee);
+            operationLogService.addOperationLog(operationLog);
         }
     }
 }

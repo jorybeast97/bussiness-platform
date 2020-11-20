@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.common.constant.ResultStatus;
+import com.fanhao.businessplatform.enhance.annotation.Operation;
 import com.fanhao.businessplatform.entity.BO.DepartmentBO;
 import com.fanhao.businessplatform.entity.Department;
 import com.fanhao.businessplatform.entity.Employee;
@@ -26,6 +27,7 @@ public class DepartmentService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    @Operation(operation = "新增或更新部门信息")
     public CommonResult<String> addOrUpdateDepartment(Integer id,
                                                       String departmentName,
                                                       String departmentRegion,
@@ -43,6 +45,7 @@ public class DepartmentService {
         return commonResult;
     }
 
+    @Operation(operation = "删除部门信息")
     public CommonResult<String> deleteDepartment(final Integer id) {
         CommonResult<String> commonResult = new CommonResult<>();
         if (id == null) {

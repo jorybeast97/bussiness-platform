@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.common.constant.ResultStatus;
+import com.fanhao.businessplatform.enhance.annotation.Operation;
 import com.fanhao.businessplatform.entity.BO.EmployeeBO;
 import com.fanhao.businessplatform.entity.Department;
 import com.fanhao.businessplatform.entity.Employee;
@@ -46,6 +47,7 @@ public class EmployeeService {
         return true;
     }
 
+    @Operation(operation = "删除员工信息")
     public CommonResult<String> deleteEmployee(final Integer id) {
         CommonResult<String> commonResult = new CommonResult<>();
         if (id == null) {
@@ -116,6 +118,7 @@ public class EmployeeService {
         return new EmployeeBO(employee, department);
     }
 
+    @Operation(operation = "新增或更新用户信息")
     public CommonResult<String> addOrUpdateEmployeeByArgs(Integer id, String username, String password,
                                                           String name, String address, Boolean gender,
                                                           String phone, String email, Integer department,

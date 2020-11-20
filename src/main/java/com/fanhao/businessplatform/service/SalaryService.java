@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.common.constant.ResultStatus;
+import com.fanhao.businessplatform.enhance.annotation.Operation;
 import com.fanhao.businessplatform.entity.BO.SalaryBO;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.entity.Salary;
@@ -29,6 +30,7 @@ public class SalaryService {
         return salaryMapper.insert(salary) > 0;
     }
 
+    @Operation(operation = "删除薪资信息")
     public CommonResult<String> deleteSalary(final Integer id) {
         salaryMapper.deleteById(id);
         CommonResult<String> commonResult = new CommonResult<>();
@@ -66,6 +68,7 @@ public class SalaryService {
         return salaryBO;
     }
 
+    @Operation(operation = "新增或修改薪资信息")
     public CommonResult<String> addOrUpdateSalary(Integer id,
                                                   Integer employeeId,
                                                   Double baseSalary,

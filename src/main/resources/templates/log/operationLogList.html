@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>企业人事管理平台</title>
+    <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
+</head>
+<body class="layui-layout-body">
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div id="layerDemo" class="layui-btn-container">
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>-->
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!--引入echarts-->
+<script th:src="@{../../static/js/echart/echarts.min.js}"></script>
+<script th:src="@{../../static/js/layui/layui.js}"></script>
+<script>
+    layui.use(['table','layer'], function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            ,url:'/operationlog/list'
+            ,parseData: function (res) {
+                return {
+                    "code" : res.code,
+                    "msg" : res.message,
+                    "count" : res.count,
+                    "data" : res.data
+                }
+            }
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                title: '提示'
+                ,layEvent: 'LAYTABLE_TIPS'
+                ,icon: 'layui-icon-tips'
+            }]
+            ,title: '异常日志'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
+                    ,{field:'username', title:'用户名', width:150}
+                    ,{field:'name', title:'姓名', width:150}
+                    ,{field:'host', title:'IP地址', width:150}
+                    ,{field:'address', title:'登录地点', width:150}
+                    ,{field:'description', title:'操作详情', width:150}
+                    ,{field:'happenTime', title:'发生时间', width:150,templet:function (operation) {
+                        return layui.util.toDateString(operation.operationTime, 'yyyy-MM-dd HH:mm:ss');
+                    }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+                ]
+            ]
+            ,page: true
+            ,limit:14
+            ,limits: [10,12,14]
+        });
+
+        var $ = layui.jquery;
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var id = obj.data.id;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.get("/operationlog/delete", {id: id}, function (response) {
+                        layer.msg(response.message);
+                        if (response.code == 200){
+                            obj.del();
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

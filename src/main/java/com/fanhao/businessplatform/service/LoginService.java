@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.common.constant.ResultStatus;
+import com.fanhao.businessplatform.enhance.annotation.Operation;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
 import com.fanhao.businessplatform.utils.HttpUtils;
@@ -69,6 +70,7 @@ public class LoginService {
         return commonResult;
     }
 
+    @Operation(operation = "退出登录")
     public void Logout(final HttpServletRequest request,
                        final HttpServletResponse response) {
         HttpUtils.writeCookie(response, PermissionUtils.JWT_TOKEN_USERNAME, "", 0);
