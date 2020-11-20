@@ -26,6 +26,19 @@ public class HttpUtils {
     private static RestTemplate restTemplate = new RestTemplate();
 
     /**
+     * 直接获取ip归属地
+     * @param ip
+     * @return
+     */
+    public static String getAddressResult(final String ip) {
+        Map<String, String> map = getIpAddressInformation(ip);
+        if (map != null) {
+            return map.get("province") + map.get("city");
+        }
+        return "局域网或本机";
+    }
+
+    /**
      * 根据IP地址获取其实际地理位置
      * @param ip
      * @return

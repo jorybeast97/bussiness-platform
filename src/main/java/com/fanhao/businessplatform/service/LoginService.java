@@ -8,15 +8,13 @@ import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
 import com.fanhao.businessplatform.utils.HttpUtils;
 import com.fanhao.businessplatform.utils.PermissionUtils;
+import com.fanhao.businessplatform.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Service("loginService")
 public class LoginService {
@@ -26,8 +24,11 @@ public class LoginService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    @Autowired
+    private OperationLogService operationLogService;
+
     /**
-     * 登录
+     * 登录校验
      *
      * @param username
      * @param password 明文密码
@@ -57,8 +58,13 @@ public class LoginService {
         }
         //登陆成功后，将TOKEN写入Cookie
         final String jwtToken = generateEmployeeToken(request, response, employee);
+        //写入Cookie
         HttpUtils.writeCookie(response, PermissionUtils.TOKEN, jwtToken, LoginService.COOKIE_EXPIRE_TIME);
         commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
+        //异步提交，避免出现异常影响其他业务逻辑工作
+        ThreadUtils.getThreadPoolHelper().execute(() -> {
+            operationLogService.addLogWhenLogin(employee, request, response);
+        });
         commonResult.setMessage("登录成功");
         return commonResult;
     }

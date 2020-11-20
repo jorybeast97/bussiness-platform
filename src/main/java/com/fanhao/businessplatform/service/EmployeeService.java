@@ -93,6 +93,12 @@ public class EmployeeService {
         return page.getRecords();
     }
 
+    public Employee selectEmployeeByUsername(final String username) {
+        QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<>();
+        employeeQueryWrapper.eq("username", username);
+        return employeeMapper.selectOne(employeeQueryWrapper);
+    }
+
     public boolean checkUsernameExist(final String username) {
         if (StringUtils.isEmpty(username)) return true;
         QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
