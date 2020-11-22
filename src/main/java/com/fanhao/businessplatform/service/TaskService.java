@@ -1,5 +1,8 @@
 package com.fanhao.businessplatform.service;
 
+import cn.hutool.Hutool;
+import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fanhao.businessplatform.common.CommonResult;
@@ -10,11 +13,11 @@ import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.entity.Task;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
 import com.fanhao.businessplatform.mapper.TaskMapper;
+import com.sun.java.swing.plaf.windows.WindowsTextAreaUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service("taskService")
 public class TaskService {
@@ -24,6 +27,50 @@ public class TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    //任务状态 1:未开始 2:准备中 3:正在进行 4:已完成 5:失败
+    public List<Map<String, Object>> getSummaryGraphInformation() {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
+        Date currMothStartTime = DateUtil.beginOfMonth(new Date());
+        Date nextMothStartTime = DateUtil.beginOfMonth(DateUtil.nextMonth());
+        taskQueryWrapper.between("create_date", currMothStartTime, nextMothStartTime);
+        List<Task> taskList = taskMapper.selectList(taskQueryWrapper);
+        Map<String, Object> notStart = initSummaryGraphMap("未开始");
+        Map<String, Object> ready = initSummaryGraphMap("准备中");
+        Map<String, Object> running = initSummaryGraphMap("进行中");
+        Map<String, Object> finished = initSummaryGraphMap("已完成");
+        Map<String, Object> failed = initSummaryGraphMap("失败");
+        taskList.forEach(task -> {
+            switch (task.getTaskStatus()){
+                case 1 :
+                    notStart.put("value", (Integer) notStart.get("value") + 1); break;
+                case 2:
+                    ready.put("value", (Integer) ready.get("value") + 1); break;
+                case 3:
+                    running.put("value", (Integer) running.get("value") + 1); break;
+                case 4:
+                    finished.put("value", (Integer) finished.get("value") + 1); break;
+                case 5:
+                    failed.put("value", (Integer) failed.get("value") + 1); break;
+                default:
+                    break;
+            }
+        });
+        resultList.add(failed);
+        resultList.add(notStart);
+        resultList.add(ready);
+        resultList.add(running);
+        resultList.add(finished);
+        return resultList;
+    }
+
+    public HashMap<String, Object> initSummaryGraphMap(String name) {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name", name);
+        result.put("value", 0);
+        return result;
+    }
 
     public TaskBO selectTaskBOById(Integer id) {
         Task task = taskMapper.selectById(id);

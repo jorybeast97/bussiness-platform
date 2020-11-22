@@ -120,26 +120,16 @@
         </div>
     </div>
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md6">
+        <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="fa fa-line-chart"> 任务完成量对比图</i></div>
+                    <i class="fa fa-line-chart"> 薪资同比图</i></div>
                 <div class="layui-card-body">
-                    <div id="user_add" style="width: 600px;height: 300px"></div>
+                    <div id="user_add" style="width: 100%;height: 300px"></div>
                 </div>
             </div>
         </div>
-        <div class="layui-col-md6">
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    <i class="fa fa-cny"> 薪资构成统计</i>
-                </div>
-                <div class="layui-card-body">
-                    <div id="test" style="width: 550px;height: 300px">
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 
@@ -152,7 +142,7 @@
         var element = layui.element;
         var $ = layui.jquery;
 
-        $.get("/console/getInfo",function (result) {
+        $.get("/console/getPersonNumInfo",function (result){
             echarts.init(document.getElementById('department_number')).setOption({
                 title: {
                     text: ''
@@ -185,137 +175,79 @@
             });
         })
 
-
-
-        echarts.init(document.getElementById("task_statistics")).setOption({
-            series : [
-                {
-                    name: '任务统计',
-                    type: 'pie',
-                    radius: '60%',
-                    roseType: 'angle',
-                    data:[
-                        {value:235, name:'正在进行'},
-                        {value:274, name:'已完成'},
-                        {value:310, name:'准备中'},
-                        {value:335, name:'未开始'},
-                        {value:400, name:'已过期'}
-                    ]
-                }
-            ]
+        $.get("/console/getSummaryGraphInfo",function (result) {
+            echarts.init(document.getElementById("task_statistics")).setOption({
+                series : [
+                    {
+                        name: '任务统计',
+                        type: 'pie',
+                        radius: '60%',
+                        roseType: 'angle',
+                        data: result
+                    }
+                ]
+            })
         })
 
-        var colors = ['#5793f3', '#d14a61', '#675bba'];
-        echarts.init(document.getElementById("user_add")).setOption({
-            color: colors,
-            tooltip: {
-                trigger: 'none',
-                axisPointer: {
-                    type: 'cross'
-                }
-            },
-            legend: {
-                data:['2019年', '2020年']
-            },
-            grid: {
-                top: 70,
-                bottom: 50
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    axisTick: {
-                        alignWithLabel: true
-                    },
-                    axisLine: {
-                        onZero: false,
-                        lineStyle: {
-                            color: colors[1]
-                        }
-                    },
-                    axisPointer: {
-                        label: {
-                            formatter: function (params) {
-                                return '任务完成OKR  ' + params.value
-                                    + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                            }
-                        }
-                    },
-                    data: ['2019-1', '2019-2', '2019-3', '2019-4', '2019-5', '2019-6', '2019-7', '2019-8', '2019-9', '2019-10', '2019-11', '2019-12']
-                },
-                {
-                    type: 'category',
-                    axisTick: {
-                        alignWithLabel: true
-                    },
-                    axisLine: {
-                        onZero: false,
-                        lineStyle: {
-                            color: colors[0]
-                        }
-                    },
-                    axisPointer: {
-                        label: {
-                            formatter: function (params) {
-                                return '任务完成OKR  ' + params.value
-                                    + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                            }
-                        }
-                    },
-                    data: ['2020-1', '2020-2', '2020-3', '2020-4', '2020-5', '2020-6', '2020-7', '2020-8', '2020-9', '2020-10', '2020-11', '2020-12']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: '2019年',
-                    type: 'line',
-                    xAxisIndex: 1,
-                    smooth: true,
-                    data: [26.7, 15.9, 49.0, 126.4, 66.7, 70.7, 175.6, 182.2, 48.7, 90.8, 46.0, 112.3]
-                },
-                {
-                    name: '2020年',
-                    type: 'line',
-                    smooth: true,
-                    data: [113.9, 125.9, 110.1, 181.7, 99.3, 109.2, 231.6, 146.6, 155.4, 128.4, 103.3, 110.7]
-                }
-            ]
-        })
-
-        //获取薪资组成信息
-        echarts.init(document.getElementById("test")).setOption(
-            {
-                title: {
-
-                },
+        $.get("/console/getSalaryInformation",function (result) {
+            var colors = ['#5793f3', '#d14a61', '#675bba'];
+            echarts.init(document.getElementById("user_add")).setOption({
+                color: colors,
                 tooltip: {
-                    trigger: 'axis',
+                    trigger: 'none',
                     axisPointer: {
-                        type: 'cross',
-                        label: {
-                            backgroundColor: '#6a7985'
-                        }
+                        type: 'cross'
                     }
                 },
                 legend: {
-                    data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+                    data:[result.title[1],result.title[0]]
                 },
                 grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
+                    top: 70,
+                    bottom: 50
                 },
                 xAxis: [
                     {
                         type: 'category',
-                        boundaryGap: false,
-                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: colors[1]
+                            }
+                        },
+                        axisPointer: {
+                            label: {
+                                formatter: function (params) {
+                                    return '薪资发放情况  ' + params.value
+                                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                                }
+                            }
+                        },
+                        data: result.preIndex
+                    },
+                    {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: colors[0]
+                            }
+                        },
+                        axisPointer: {
+                            label: {
+                                formatter: function (params) {
+                                    return '薪资发放情况  ' + params.value
+                                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                                }
+                            }
+                        },
+                        data: result.currIndex
                     }
                 ],
                 yAxis: [
@@ -325,50 +257,23 @@
                 ],
                 series: [
                     {
-                        name: '邮件营销',
+                        name: result.title[1],
                         type: 'line',
-                        stack: '总量',
-                        areaStyle: {},
-                        data: [120, 132, 101, 134, 90, 230, 210]
+                        xAxisIndex: 1,
+                        smooth: true,
+                        data: result.currSalary
                     },
                     {
-                        name: '联盟广告',
+                        name: result.title[0],
                         type: 'line',
-                        stack: '总量',
-                        areaStyle: {},
-                        data: [220, 182, 191, 234, 290, 330, 310]
-                    },
-                    {
-                        name: '视频广告',
-                        type: 'line',
-                        stack: '总量',
-                        areaStyle: {},
-                        data: [150, 232, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name: '直接访问',
-                        type: 'line',
-                        stack: '总量',
-                        areaStyle: {},
-                        data: [320, 332, 301, 334, 390, 330, 320]
-                    },
-                    {
-                        name: '搜索引擎',
-                        type: 'line',
-                        stack: '总量',
-                        label: {
-                            normal: {
-                                show: true,
-                                position: 'top'
-                            }
-                        },
-                        areaStyle: {},
-                        data: [820, 932, 901, 934, 1290, 1330, 1320]
+                        xAxisIndex: 0,
+                        smooth: true,
+                        data: result.preSalary
                     }
-                ]
-            }
 
-    )
+                ]
+            })
+        })
     });
 
 

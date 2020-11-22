@@ -52,21 +52,21 @@
                 [
                     {type: 'checkbox', fixed: 'left'}
                     ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
-                    ,{field:'departmentName', title:'部门名称', width:150, edit: 'text'}
-                    ,{field:'departmentLeader', title:'部门负责人', width:150, edit: 'text',templet:function (department) {
+                    ,{field:'departmentName', title:'部门名称', width:150}
+                    ,{field:'departmentLeader', title:'部门负责人', width:150,templet:function (department) {
                         if (department.departmentLeader == null) return '暂无';
                         else return department.departmentLeader.name;
                     }}
-                    ,{field:'phone', title:'负责人联系方式', width:200, edit: 'text',templet:function (department) {
+                    ,{field:'phone', title:'负责人联系方式', width:200,templet:function (department) {
                         if (department.departmentLeader == null) return '暂无';
                         else return department.departmentLeader.phone;
                     }}
-                    ,{field:'position', title:'负责人职位', width:200, edit: 'text',templet:function (department) {
+                    ,{field:'position', title:'负责人职位', width:200,templet:function (department) {
                         if (department.departmentLeader == null) return '暂无';
                         else return department.departmentLeader.position;
                     }}
-                    ,{field:'departmentRegion', title:'部门负责区域', width:200, edit: 'text'}
-                    ,{field:'description', title:'部门简述', width:200, edit: 'text'}
+                    ,{field:'departmentRegion', title:'部门负责区域', width:200}
+                    ,{field:'description', title:'部门简述', width:200}
                     ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
                 ]
             ]

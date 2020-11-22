@@ -66,6 +66,22 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">任务状态</label>
+                <div class="layui-input-inline">
+                    <select name="taskStatus" lay-verify="required" lay-search="">
+                        <option th:value="${taskInfo.getTaskStatus()}" value="1">默认</option>
+                        <option value="1">未开始</option>
+                        <option value="2">准备中</option>
+                        <option value="3">进行中</option>
+                        <option value="4">已结束</option>
+                        <option value="5">失败</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <div class="layui-form-item layui-form-text" style="width: 95%">
             <label class="layui-form-label">任务内容</label>
             <div class="layui-input-block">

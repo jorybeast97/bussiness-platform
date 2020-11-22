@@ -1,12 +1,13 @@
 package com.fanhao.businessplatform;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.fanhao.businessplatform.entity.Employee;
-import com.fanhao.businessplatform.utils.DataCreaterUtils;
+import com.fanhao.businessplatform.service.ConsoleService;
+import com.fanhao.businessplatform.service.TaskService;
+import com.fanhao.businessplatform.utils.*;
 import com.fanhao.businessplatform.service.EmployeeService;
-import com.fanhao.businessplatform.utils.GsonUtils;
-import com.fanhao.businessplatform.utils.HttpUtils;
-import com.fanhao.businessplatform.utils.PermissionUtils;
 import com.google.gson.Gson;
 import org.apache.http.client.HttpClient;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,10 +32,18 @@ class BusinessPlatformApplicationTests {
     @Autowired
     private DataCreaterUtils dataCreaterUtils;
 
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private ConsoleService consoleService;
+
     @Test
     void contextLoads() {
-        Map<String, String> addressMap = HttpUtils.getIpAddressInformation("36.98.246.112");
-        System.out.println(addressMap.get("province") + addressMap.get("city"));
+        List<DateTime> year = consoleService.getPreMonthDateList();
+        List<Double> salary = consoleService.getEveryMonthSalaryInfo(year);
+        System.out.println(consoleService.getSalaryIndexList(year));
+
     }
 
 }

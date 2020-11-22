@@ -19,6 +19,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller("console")
 @RequestMapping("/console")
@@ -35,17 +36,28 @@ public class ConsoleController {
         model.addAttribute("memory_info", CommonUtils.memoryLoad());
         model.addAttribute("ip_address", consoleService.getIpAddress(request));
         model.addAttribute("jdk_version", CommonUtils.jdkInfo());
+
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 7; i++) list.add(String.valueOf(i));
         model.addAttribute("afterlist", list);
         return "/overview/console";
     }
 
-    @RequestMapping("/getInfo")
+    @RequestMapping("/getPersonNumInfo")
     @ResponseBody
-    public HashMap<String,List<String>> getInfo() throws InterruptedException {
-
+    public HashMap<String, List<String>> getInfo() throws InterruptedException {
         return consoleService.getEmployeeNumberOverview();
     }
 
+    @RequestMapping("/getSummaryGraphInfo")
+    @ResponseBody
+    public List<Map<String, Object>> getSummaryGraphInformation() {
+        return consoleService.getSummaryGraphInformation();
+    }
+
+    @RequestMapping(value = "/getSalaryInformation")
+    @ResponseBody
+    public Map<String, Object> getSalaryInformation() {
+        return consoleService.getSalaryInformation();
+    }
 }
