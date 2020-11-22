@@ -8,7 +8,28 @@
     <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
 </head>
 <body class="layui-layout-body">
+<br>
+<form class="layui-form" action="" id="search">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">员工姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="searchName" lay-verify="" autocomplete="off" class="layui-input" >
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">员工ID-Card</label>
+            <div class="layui-input-inline">
+                <input type="text" name="idCard" id="searchIdCard" lay-verify="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
 
+        <div class="layui-inline"style="float: right">
+            <button type="button" onclick="doSearch();" class="layui-btn">Search</button>
+            <button type="reset"  class="layui-btn layui-btn-normal">重置信息</button>
+        </div>
+    </div>
+</form>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
 <script type="text/html" id="toolbarDemo">
@@ -26,12 +47,15 @@
 </script>
 <!--引入echarts-->
 <script th:src="@{../../static/js/echart/echarts.min.js}"></script>
-<script th:src="@{../../static/js/layui/layui.js}"></script>
+<script th:src="@{../../static/js/layui/layui.all.js}"></script>
 <script>
-    layui.use(['table','layer'], function(){
-        var table = layui.table;
+    var $;
+    var table;
+    layui.use(['table','layer','form'], function(){
+            table = layui.table;
         var layer = layui.layer;
-        var $ = layui.jquery;
+        $ = layui.jquery
+
 
         table.render({
             elem: '#test'
@@ -99,8 +123,8 @@
                 ]
             ]
             ,page: true
-            ,limit:14
-            ,limits: [10,12,14]
+            ,limit:13
+            ,limits: [10,12]
         });
 
         //头工具栏事件
@@ -193,7 +217,17 @@
         });
     });
 
-
+    function doSearch() {
+        //获取参数
+        var nameParam = $("#searchName").val();
+        var idCardParam = $("#searchIdCard").val();
+        table.reload('test',{
+            where: {
+                name: nameParam,
+                idCard: idCardParam
+            }
+        })
+    }
 
 </script>
 </body>

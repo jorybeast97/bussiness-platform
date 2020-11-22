@@ -47,6 +47,23 @@ public class EmployeeService {
         return true;
     }
 
+    public CommonResult<List<EmployeeBO>> searchByNameAndIdCard(String name,
+                                                                String idCard) {
+        QueryWrapper<Employee> wrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(name)) wrapper.eq("name", name);
+        if (!StringUtils.isEmpty(idCard)) wrapper.eq("id_card", idCard);
+        List<Employee> employeeList = employeeMapper.selectList(wrapper);
+        List<EmployeeBO> bos = new ArrayList<>();
+        employeeList.forEach(employee -> {
+            bos.add(generateEmployeeBO(employee));
+        });
+        CommonResult<List<EmployeeBO>> result = new CommonResult<>();
+        result.setCode(ResultStatus.LAYUI_SUCCESS.getResultCode());
+        result.setCount(Long.valueOf(bos.size()));
+        result.setData(bos);
+        return result;
+    }
+
     @Operation(operation = "删除员工信息")
     public CommonResult<String> deleteEmployee(final Integer id) {
         CommonResult<String> commonResult = new CommonResult<>();
@@ -70,9 +87,15 @@ public class EmployeeService {
         return employeeMapper.selectById(id);
     }
 
-    public CommonResult<List<EmployeeBO>> selectList(final Integer pageNum, final Integer pageSize) {
+    public CommonResult<List<EmployeeBO>> selectList(final Integer pageNum,
+                                                     final Integer pageSize,
+                                                     String name,
+                                                     String idCard) {
         IPage<Employee> page = new Page<>(pageNum, pageSize);
-        page = employeeMapper.selectPage(page,null);
+        QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(name)) employeeQueryWrapper.eq("name", name);
+        if (!StringUtils.isEmpty(idCard)) employeeQueryWrapper.eq("id_card", idCard);
+        page = employeeMapper.selectPage(page,employeeQueryWrapper);
         List<Employee> employeeList = page.getRecords();
         List<EmployeeBO> employeeBOS = new ArrayList<>();
         employeeList.forEach(employee -> {

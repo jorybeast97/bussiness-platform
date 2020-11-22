@@ -42,9 +42,11 @@ public class EmployeeController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<EmployeeBO>> employeeList(final Integer page,
-                                                       final Integer limit) {
+                                                       final Integer limit,
+                                                       String name,
+                                                       String idCard) {
 
-        return employeeService.selectList(page, limit);
+        return employeeService.selectList(page, limit, name, idCard);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -64,5 +66,4 @@ public class EmployeeController {
     public CommonResult<String> delete(Integer id) {
         return employeeService.deleteEmployee(id);
     }
-
 }
