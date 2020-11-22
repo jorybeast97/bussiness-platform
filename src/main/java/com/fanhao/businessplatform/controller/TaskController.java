@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller("task")
@@ -34,6 +36,15 @@ public class TaskController {
         TaskBO taskBO = taskService.selectTaskBOById(id);
         model.addAttribute("taskInfo", taskBO);
         return "/task/editTask";
+    }
+
+    @RequestMapping(value = "/taskStatistics")
+    public String taskStatisticsPage(final HttpServletRequest request,
+                                     final HttpServletResponse response,
+                                     Model model) {
+        List<TaskBO> list = taskService.getLeastTaskInformation(request, response);
+        model.addAttribute("least_task", list);
+        return "/task/taskStatistics";
     }
 
     @RequestMapping(value = "/save",method = RequestMethod.POST)

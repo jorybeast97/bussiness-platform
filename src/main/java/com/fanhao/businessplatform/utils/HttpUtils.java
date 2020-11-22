@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
@@ -45,7 +46,13 @@ public class HttpUtils {
      */
     public static Map<String, String> getIpAddressInformation(final String ip) {
         if (StringUtils.isEmpty(ip)) return null;
-        String addressJson = restTemplate.postForObject(getBaiduApiUrl(ip), null, String.class);
+        String addressJson = null;
+        try {
+            addressJson = restTemplate.postForObject(getBaiduApiUrl(ip), null, String.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            return null;
+        }
         Gson gson = GsonUtils.getGson();
         Map initMap = gson.fromJson(addressJson, Map.class);
         String status = String.valueOf(initMap.get("status"));

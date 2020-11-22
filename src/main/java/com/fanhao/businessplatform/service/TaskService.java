@@ -13,10 +13,14 @@ import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.entity.Task;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
 import com.fanhao.businessplatform.mapper.TaskMapper;
+import com.fanhao.businessplatform.utils.HttpUtils;
+import com.fanhao.businessplatform.utils.PermissionUtils;
 import com.sun.java.swing.plaf.windows.WindowsTextAreaUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service("taskService")
@@ -27,6 +31,26 @@ public class TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    public List<TaskBO> getLeastTaskInformation(final HttpServletRequest request,
+                                                final HttpServletResponse response) {
+        String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
+        String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
+        //查询对应的员工
+        QueryWrapper<Employee> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username);
+        Employee employee = employeeMapper.selectOne(wrapper);
+        //查询对应个人任务
+        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
+        taskQueryWrapper.eq("receiver", employee.getId())
+                .orderByAsc("end_date");
+        List<Task> taskList = taskMapper.selectList(taskQueryWrapper);
+        List<TaskBO> result = new ArrayList<>();
+        taskList.forEach(task -> {
+            result.add(generateTaskBO(task));
+        });
+        return result;
+    }
 
     //任务状态 1:未开始 2:准备中 3:正在进行 4:已完成 5:失败
     public List<Map<String, Object>> getSummaryGraphInformation() {
