@@ -21,6 +21,7 @@ public class WebResourceConfig extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(pageInterceptor)
                 .excludePathPatterns("/login")
-                .excludePathPatterns("/check");
+                .excludePathPatterns("/check")
+                .excludePathPatterns("/static/**");
     }
 }
