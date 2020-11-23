@@ -14,7 +14,7 @@
         <div class="layui-col-md7">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="fa fa-bar-chart"> 收入曲线</i>
+                    <i class="fa fa-line-chart"> 收入曲线</i>
                 </div>
                 <div class="layui-card-body">
                     <div id="salaryCurve" style="width: 100% ;height: 300px">
@@ -26,7 +26,7 @@
         <div class="layui-col-md5">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="fa fa-bar-chart"> 薪资构成</i>
+                    <i class="fa fa-pie-chart"> 薪资构成</i>
                 </div>
                 <div class="layui-card-body">
                     <div id="salaryComponent" style="width: 100% ;height: 300px">
@@ -41,7 +41,7 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <i class="fa fa-bar-chart"> 薪资数据</i>
+                    <i class="fa fa-newspaper-o"> 薪资数据</i>
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -103,63 +103,66 @@
             ,limits: [7]
         });
 
-    });
-
-    echarts.init(document.getElementById("salaryCurve")).setOption({
-        xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line'
-        }]
-    });
-
-    echarts.init(document.getElementById("salaryComponent")).setOption({
-        tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        legend: {
-            orient: 'vertical',
-            left: 10,
-            data: ['基础薪资', '奖金', '餐饮补助', '交通补助', '房租补助','额外补助']
-        },
-        series: [
-            {
-                name: '薪资构成',
-                type: 'pie',
-                radius: ['50%', '70%'],
-                avoidLabelOverlap: false,
-                label: {
-                    show: false,
-                    position: 'center'
+        $.get("/salary/personalSalaryPieChart", function (result) {
+            echarts.init(document.getElementById("salaryComponent")).setOption({
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
                 },
-                emphasis: {
-                    label: {
-                        show: true,
-                        fontSize: '30',
-                        fontWeight: 'bold'
+                legend: {
+                    orient: 'vertical',
+                    left: 10,
+                    data: ['基础薪资', '奖金', '餐饮补助', '交通补助', '房租补助', '额外补助']
+                },
+                series: [
+                    {
+                        name: '薪资构成',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: result
                     }
-                },
-                labelLine: {
-                    show: false
-                },
-                data: [
-                    {value: 335, name: '基础薪资'},
-                    {value: 310, name: '奖金'},
-                    {value: 234, name: '餐饮补助'},
-                    {value: 135, name: '交通补助'},
-                    {value: 1548, name: '房租补助'},
-                    {value: 349, name: '额外补助'}
                 ]
-            }
-        ]
+            });
+        });
+        
+        $.get("/salary/personalSalaryLineChart",function (result) {
+            echarts.init(document.getElementById("salaryCurve")).setOption({
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: result.date
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: result.salary,
+                    type: 'line',
+                    areaStyle: {}
+                }]
+            });
+        })
+
     });
+
+
+
+
 
 </script>
 </body>

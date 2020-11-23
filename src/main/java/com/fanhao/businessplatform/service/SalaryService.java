@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SalaryService {
@@ -37,7 +39,83 @@ public class SalaryService {
     }
 
     /**
+     * 获取个人薪资折线图信息
+     * @param request
+     * @param response
+     * @return
+     */
+    public Map<String, List<String>> getPersonalSalaryLineChart(final HttpServletRequest request,
+                                                                final HttpServletResponse response) {
+        String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
+        String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
+        Employee employee = employeeMapper.
+                selectOne(new QueryWrapper<Employee>().eq(PermissionUtils.JWT_TOKEN_USERNAME, username));
+        QueryWrapper<Salary> salaryQueryWrapper = new QueryWrapper<>();
+        salaryQueryWrapper.eq("employee_id", employee.getId()).orderByDesc();
+        //获取8条
+        IPage<Salary> page = new Page<>(1, 8);
+        List<Salary> salaryList = salaryMapper.selectPage(page, salaryQueryWrapper).getRecords();
+        List<String> salarys = new ArrayList<>();
+        List<String> dates = new ArrayList<>();
+        salaryList.forEach(salary -> {
+            salarys.add(String.valueOf(salary.getTotalSalary()));
+            dates.add(CommonUtils.parseStringFromDate(salary.getGrantDate(),"MM-dd"));
+        });
+        Map<String, List<String>> result = new HashMap<>();
+        result.put("salary", salarys);
+        result.put("date", dates);
+        return result;
+    }
+
+
+    /**
+     * 获取个人薪资饼状图信息
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    public List<Map<String, String>> getPersonalSalaryPieChart(final HttpServletRequest request,
+                                                               final HttpServletResponse response) {
+        String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
+        String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
+        Employee employee = employeeMapper.
+                selectOne(new QueryWrapper<Employee>().eq(PermissionUtils.JWT_TOKEN_USERNAME, username));
+        QueryWrapper<Salary> salaryQueryWrapper = new QueryWrapper<>();
+        salaryQueryWrapper.orderByDesc("grant_date").eq("employee_id", employee.getId());
+        List<Salary> salaries = salaryMapper.selectList(salaryQueryWrapper);
+        Salary leastSalary = salaries.get(0);
+        Map<String, String> baseSalary = new HashMap<>();
+        baseSalary.put("name", "基础薪资");
+        baseSalary.put("value", String.valueOf(leastSalary.getBaseSalary()));
+        Map<String, String> bonus = new HashMap<>();
+        bonus.put("name", "奖金");
+        bonus.put("value", String.valueOf(leastSalary.getBonus()));
+        Map<String, String> mealSubsidy = new HashMap<>();
+        mealSubsidy.put("name", "餐饮补助");
+        mealSubsidy.put("value", String.valueOf(leastSalary.getMealSubsidy()));
+        Map<String, String> trafficSubsidy = new HashMap<>();
+        trafficSubsidy.put("name", "交通补助");
+        trafficSubsidy.put("value", String.valueOf(leastSalary.getTrafficSubsidy()));
+        Map<String, String> rentSubsidy = new HashMap<>();
+        rentSubsidy.put("name", "房租补助");
+        rentSubsidy.put("value", String.valueOf(leastSalary.getRentSubsidy()));
+        Map<String, String> additionalSalary = new HashMap<>();
+        additionalSalary.put("name", "额外补助");
+        additionalSalary.put("value", String.valueOf(leastSalary.getAdditionalSalary()));
+        List<Map<String, String>> list = new ArrayList<>();
+        list.add(additionalSalary);
+        list.add(baseSalary);
+        list.add(bonus);
+        list.add(mealSubsidy);
+        list.add(rentSubsidy);
+        list.add(trafficSubsidy);
+        return list;
+    }
+
+    /**
      * 删除薪资信息
+     *
      * @param id
      * @return
      */
@@ -52,6 +130,7 @@ public class SalaryService {
 
     /**
      * 获取登陆人的个人薪资信息
+     *
      * @param request
      * @param response
      * @param pageNum
@@ -93,6 +172,7 @@ public class SalaryService {
 
     /**
      * 获取所有的薪资信息
+     *
      * @param pageNum
      * @param pageSize
      * @return
@@ -114,6 +194,7 @@ public class SalaryService {
 
     /**
      * 将Salary生成为一个SalaryBO
+     *
      * @param salary
      * @return
      */
@@ -125,6 +206,7 @@ public class SalaryService {
 
     /**
      * 新增或修改薪资信息
+     *
      * @param id
      * @param employeeId
      * @param baseSalary
@@ -155,7 +237,7 @@ public class SalaryService {
         if (salary.getId() == null) {
             salaryMapper.insert(salary);
             commonResult.setMessage("添加成功");
-        }else {
+        } else {
             salaryMapper.updateById(salary);
             commonResult.setMessage("修改成功");
         }

@@ -11,6 +11,14 @@ import java.util.Date;
 public class CommonUtils {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    //date转为String
+    public static String parseStringFromDate(final Date date,
+                                             final String form) {
+        SimpleDateFormat format = new SimpleDateFormat(form);
+        return format.format(date);
+    }
+
+    //String转为Date
     public static Date parseDateFromString(final String dateStr) {
         if (StringUtils.isEmpty(dateStr)) return null;
         try {

@@ -23,6 +23,7 @@ public class PermissionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionUtils.class);
     public static final String TOKEN = "jwt-token";
     public static final long DEFAULT_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000;
+    public static final String JWT_TOKEN_ID = "id";
     public static final String JWT_TOKEN_USERNAME = "username";
     public static final String JWT_TOKEN_ROLE = "role";
     public static final String JWT_TOKEN_NAME = "name";

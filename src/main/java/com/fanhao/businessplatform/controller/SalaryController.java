@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Controller("salary")
 @RequestMapping(value = "/salary")
@@ -53,6 +54,20 @@ public class SalaryController {
                                      final HttpServletResponse response,
                                      Model model) {
         return "/salary/personalSalary";
+    }
+
+    @RequestMapping(value = "/personalSalaryLineChart")
+    @ResponseBody
+    public Map<String, List<String>> getPersonalSalaryLineChart(final HttpServletRequest request,
+                                                                final HttpServletResponse response) {
+        return salaryService.getPersonalSalaryLineChart(request, response);
+    }
+
+    @RequestMapping(value = "/personalSalaryPieChart")
+    @ResponseBody
+    public List<Map<String, String>> getPersonalSalaryPieChart(final HttpServletRequest request,
+                                                               final HttpServletResponse response) {
+        return salaryService.getPersonalSalaryPieChart(request, response);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
