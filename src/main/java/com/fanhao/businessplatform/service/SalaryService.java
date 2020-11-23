@@ -1,5 +1,7 @@
 package com.fanhao.businessplatform.service;
 
+import cn.hutool.http.HttpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fanhao.businessplatform.common.CommonResult;
@@ -11,9 +13,13 @@ import com.fanhao.businessplatform.entity.Salary;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
 import com.fanhao.businessplatform.mapper.SalaryMapper;
 import com.fanhao.businessplatform.utils.CommonUtils;
+import com.fanhao.businessplatform.utils.HttpUtils;
+import com.fanhao.businessplatform.utils.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +36,52 @@ public class SalaryService {
         return salaryMapper.insert(salary) > 0;
     }
 
+
+
+    /**
+     * 删除薪资信息
+     * @param id
+     * @return
+     */
     @Operation(operation = "删除薪资信息")
     public CommonResult<String> deleteSalary(final Integer id) {
         salaryMapper.deleteById(id);
         CommonResult<String> commonResult = new CommonResult<>();
         commonResult.setMessage("删除完成");
         commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
+        return commonResult;
+    }
+
+    /**
+     * 获取登陆人的个人薪资信息
+     * @param request
+     * @param response
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public CommonResult<List<SalaryBO>> getPersonalSalaryInformation(final HttpServletRequest request,
+                                                                     final HttpServletResponse response,
+                                                                     Integer pageNum,
+                                                                     Integer pageSize) {
+        String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
+        String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
+        QueryWrapper<Employee> employeeQueryWrapper = new QueryWrapper<>();
+        employeeQueryWrapper.eq("username", username);
+        Employee employee = employeeMapper.selectOne(employeeQueryWrapper);
+        IPage<Salary> page = new Page<>(pageNum, pageSize);
+        QueryWrapper<Salary> salaryQueryWrapper = new QueryWrapper<>();
+        salaryQueryWrapper.eq("employee_id", employee.getId()).orderByDesc("grant_date");
+        page = salaryMapper.selectPage(page, salaryQueryWrapper);
+        List<Salary> list = page.getRecords();
+        List<SalaryBO> salaryBOS = new ArrayList<>();
+        list.forEach(salary -> {
+            salaryBOS.add(generateSalaryBO(salary));
+        });
+        CommonResult<List<SalaryBO>> commonResult = new CommonResult<>();
+        commonResult.setData(salaryBOS);
+        commonResult.setCount(page.getTotal());
+        commonResult.setCode(ResultStatus.LAYUI_SUCCESS.getResultCode());
         return commonResult;
     }
 
@@ -47,6 +93,12 @@ public class SalaryService {
         return salaryMapper.selectById(id);
     }
 
+    /**
+     * 获取所有的薪资信息
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     public CommonResult<List<SalaryBO>> selectAllSalary(final Integer pageNum,
                                                         final Integer pageSize) {
         IPage<Salary> page = new Page<>(pageNum, pageSize);
@@ -62,12 +114,32 @@ public class SalaryService {
         return commonResult;
     }
 
+    /**
+     * 将Salary生成为一个SalaryBO
+     * @param salary
+     * @return
+     */
     private SalaryBO generateSalaryBO(final Salary salary) {
         Employee employee = employeeMapper.selectById(salary.getEmployeeId());
         SalaryBO salaryBO = new SalaryBO(salary, employee);
         return salaryBO;
     }
 
+    /**
+     * 新增或修改薪资信息
+     * @param id
+     * @param employeeId
+     * @param baseSalary
+     * @param bonus
+     * @param mealSubsidy
+     * @param trafficSubsidy
+     * @param rentSubsidy
+     * @param additionalSalary
+     * @param remark
+     * @param totalSalary
+     * @param grantDate
+     * @return
+     */
     @Operation(operation = "新增或修改薪资信息")
     public CommonResult<String> addOrUpdateSalary(Integer id,
                                                   Integer employeeId,
@@ -92,6 +164,9 @@ public class SalaryService {
         return commonResult;
     }
 
+    /**
+     * 封装Request请求成为一个Salary实体类
+     */
     private Salary generateSalary(Integer id,
                                   Integer employeeId,
                                   Double baseSalary,

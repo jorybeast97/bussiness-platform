@@ -48,12 +48,30 @@ public class SalaryController {
         return "/salary/editSalary";
     }
 
+    @RequestMapping(value = "/personalsalary")
+    public String personalSalaryPage(final HttpServletRequest request,
+                                     final HttpServletResponse response,
+                                     Model model) {
+        return "/salary/personalSalary";
+    }
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<SalaryBO>> getSalaryBOList(Integer page,
                                                         Integer limit) {
         return salaryService.selectAllSalary(page, limit);
     }
+
+    @RequestMapping(value = "/personallist", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<SalaryBO>> getPersonalSalaryBOList(final HttpServletRequest request,
+                                                        final HttpServletResponse response,
+                                                        Integer page,
+                                                        Integer limit) {
+        return salaryService.getPersonalSalaryInformation(request, response, page, limit);
+    }
+
+
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody

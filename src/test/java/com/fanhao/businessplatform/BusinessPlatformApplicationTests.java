@@ -40,10 +40,11 @@ class BusinessPlatformApplicationTests {
 
     @Test
     void contextLoads() {
-        List<DateTime> year = consoleService.getPreMonthDateList();
-        List<Double> salary = consoleService.getEveryMonthSalaryInfo(year);
-        System.out.println(consoleService.getSalaryIndexList(year));
-
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoibm9ybWFsIiwibmFtZSI6IuaZrumAmua1i-ivlei0puWPtyIsImV4cCI6MTYwNjIwMjk0OCwiaWF0IjoxNjA2MTE2NTQ4LCJ1c2VybmFtZSI6InRlc3QifQ.6aSNHczZKxouma8DAd8H0MWtYMJZ37ow1JKwzj8iDeE";
+        String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
+        String name = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_NAME);
+        String role = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_ROLE);
+        System.out.println(username + name + role);
     }
 
 }

@@ -41,7 +41,7 @@
                 <label class="layui-form-label">任务创建者</label>
                 <div class="layui-input-block">
                     <select name="sender" lay-verify="required" lay-search=""
-                            th:with="employeelist=${@employee.employeeList(1,10000).getData()}">
+                            th:with="employeelist=${@employee.employeeList(1,10000,null,null).getData()}">
                         <option value="" selected="">请选择</option>
                         <option th:each="employee : ${employeelist}"
                                 th:text="${employee.getName() + ' - ' +employee.getPosition() + ' : ' + employee.getIdCard()}"
@@ -54,7 +54,7 @@
                 <label class="layui-form-label">任务负责人</label>
                 <div class="layui-input-block">
                     <select name="receiver" lay-verify="required" lay-search=""
-                            th:with="employeelist=${@employee.employeeList(1,10000).getData()}">
+                            th:with="employeelist=${@employee.employeeList(1,10000,null,null).getData()}">
                         <option value="" selected="">请选择</option>
                         <option th:each="employee : ${employeelist}"
                                 th:text="${employee.getName() + ' - ' +employee.getPosition() + ' : ' + employee.getIdCard()}"

@@ -23,7 +23,7 @@
             <label class="layui-form-label">负责人</label>
             <div class="layui-input-block">
                 <select name="departmentLeader" lay-verify="required" lay-search=""
-                        th:with="employeelist=${@employee.employeeList(1,10000).getData()}">
+                        th:with="employeelist=${@employee.employeeList(1,10000,null,null).getData()}">
                     <option th:value="${department_info.getDepartmentLeader().getId()}"
                             th:text="${department_info.getDepartmentLeader().getName() + ' - ' +
                             department_info.getDepartmentLeader().getPosition() + ' : ' +

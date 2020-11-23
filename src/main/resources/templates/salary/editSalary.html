@@ -16,7 +16,7 @@
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-block">
                 <select name="employeeId" lay-verify="required" lay-search=""
-                        th:with="employeelist=${@employee.employeeList(1,10000).getData()}">
+                        th:with="employeelist=${@employee.employeeList(1,10000,null,null).getData()}">
                     <option th:value="${salaryInfo.getEmployeeId()}" selected="">默认</option>
                     <option th:each="employee : ${employeelist}"
                             th:text="${employee.getName() + ' - ' +employee.getPosition() + ' : ' + employee.getIdCard()}"
