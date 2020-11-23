@@ -57,6 +57,11 @@ public class LoginService {
             commonResult.setMessage("用户名或密码错误");
             return commonResult;
         }
+        if (employee.isStatus()) {
+            commonResult.setCode(ResultStatus.FAILED.getResultCode());
+            commonResult.setMessage("账号已经被冻结,请联系管理员");
+            return commonResult;
+        }
         //登陆成功后，将TOKEN写入Cookie
         final String jwtToken = generateEmployeeToken(request, response, employee);
         //写入Cookie
@@ -73,7 +78,7 @@ public class LoginService {
     @Operation(operation = "退出登录")
     public void Logout(final HttpServletRequest request,
                        final HttpServletResponse response) {
-        HttpUtils.writeCookie(response, PermissionUtils.JWT_TOKEN_USERNAME, "", 0);
+        HttpUtils.writeCookie(response, PermissionUtils.TOKEN, null, 0);
     }
 
     public String generateEmployeeToken(final HttpServletRequest request,

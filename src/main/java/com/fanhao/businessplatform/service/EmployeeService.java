@@ -150,6 +150,7 @@ public class EmployeeService {
                                                           String quitDate, Integer workAge, Boolean status,
                                                           String remark) {
         CommonResult<String> commonResult = new CommonResult<>();
+        password = SecureUtil.md5(password);
         Employee employee = generateEmployee(id, username, password, name, address, gender, phone, email, department, position, role, birthday, idCard, school, contractStartDate, quitDate, workAge, status, remark);
         if (id == null) {
             if (checkUsernameExist(username)){

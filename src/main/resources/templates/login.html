@@ -57,14 +57,13 @@
         </div>
     </div>
 </div>
-<script th:src="@{../static/js/jquery-3.4.1/jquery-3.4.1.min.js}" charset="utf-8"></script>
 <script th:src="@{../static/js/layui/layui.all.js}" charset="utf-8"></script>
-<script th:src="@{../static/js/jq-module/jquery.particleground.min.js}" charset="utf-8"></script>
 <script>
+    var $;
     layui.use(['form'], function () {
         var form = layui.form;
         var layer = layui.layer;
-
+        $ = layui.jquery;
     });
 
     var layer = layui.layer;

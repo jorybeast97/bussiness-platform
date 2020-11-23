@@ -4,6 +4,8 @@ import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.entity.BO.DepartmentBO;
 import com.fanhao.businessplatform.entity.Department;
 import com.fanhao.businessplatform.service.DepartmentService;
+import com.fanhao.businessplatform.service.PermissionService;
+import com.fanhao.businessplatform.utils.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller("department")
@@ -20,8 +24,15 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private PermissionService permissionService;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String departmentPage() {
+    public String departmentPage(final HttpServletRequest request,
+                                 final HttpServletResponse response,
+                                 Model model) {
+        String roleResult = permissionService.checkUserPermission(request, response);
+        model.addAttribute(PermissionUtils.JWT_TOKEN_ROLE, roleResult);
         return "/department/departmentlist";
     }
 

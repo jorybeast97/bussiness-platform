@@ -4,6 +4,8 @@ import com.fanhao.businessplatform.common.CommonResult;
 import com.fanhao.businessplatform.entity.BO.EmployeeBO;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.service.EmployeeService;
+import com.fanhao.businessplatform.service.PermissionService;
+import com.fanhao.businessplatform.utils.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +23,15 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private PermissionService permissionService;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String employeePage() {
+    public String employeePage(final HttpServletRequest request,
+                               final HttpServletResponse response,
+                               Model model) {
+        String roleResult = permissionService.checkUserPermission(request, response);
+        model.addAttribute(PermissionUtils.JWT_TOKEN_ROLE, roleResult);
         return "/employee/employeelist";
     }
 
@@ -37,6 +46,17 @@ public class EmployeeController {
         Employee employee = employeeService.selectEmployeeById(id);
         model.addAttribute("employee_info", employee);
         return "/employee/editEmployee";
+    }
+
+    @RequestMapping(value = "/editpersonalinfo")
+    public String editPersonalInfo(final HttpServletRequest request,
+                                   final HttpServletResponse response,
+                                   Model model) {
+        Employee employee = permissionService.getCurrentUser(request, response);
+        model.addAttribute("personal_employee", employee);
+        String roleResult = permissionService.checkUserPermission(request, response);
+        model.addAttribute(PermissionUtils.JWT_TOKEN_ROLE, roleResult);
+        return "/employee/editPersonalInfo";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)

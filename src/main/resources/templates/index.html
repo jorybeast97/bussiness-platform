@@ -51,7 +51,7 @@
                         <i class="fa fa-user-circle"> 薪资信息</i>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/salary/" target="content_iframe"> 薪资列表</a></dd>
+                        <dd th:remove="${role}"><a href="/salary/" target="content_iframe"> 薪资列表</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
@@ -59,7 +59,7 @@
                         <i class="fa fa-tasks"> 任务流程</i>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/task/" target="content_iframe"> 任务列表</a></dd>
+                        <dd th:remove="${role}"><a href="/task/" target="content_iframe"> 任务列表</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
@@ -102,7 +102,7 @@
             ,btn: '关闭窗口'
             ,btnAlign: 'c'//按钮排列：居中对齐
             ,moveType: 1 //拖拽模式，0或者1
-            ,content: '/employee/addemployee'
+            ,content: '/employee/editpersonalinfo'
             ,yes : function () {
                 layer.closeAll();
             }

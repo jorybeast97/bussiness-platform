@@ -47,12 +47,7 @@ public class HttpUtils {
     public static Map<String, String> getIpAddressInformation(final String ip) {
         if (StringUtils.isEmpty(ip)) return null;
         String addressJson = null;
-        try {
-            addressJson = restTemplate.postForObject(getBaiduApiUrl(ip), null, String.class);
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            return null;
-        }
+        addressJson = restTemplate.postForObject(getBaiduApiUrl(ip), null, String.class);
         Gson gson = GsonUtils.getGson();
         Map initMap = gson.fromJson(addressJson, Map.class);
         String status = String.valueOf(initMap.get("status"));
