@@ -36,8 +36,6 @@ public class SalaryService {
         return salaryMapper.insert(salary) > 0;
     }
 
-
-
     /**
      * 删除薪资信息
      * @param id

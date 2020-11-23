@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" th:href="@{../static/js/layui/css/layui.css}" media="all">
-    <link rel="stylesheet" th:href="@{../static/js/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{../static/js/font-awesome-4.7.0/css/font-awesome.css}">
     <link rel="shortcut icon" th:href="@{../static/image/favicon.png}">
     <style>
@@ -19,7 +18,8 @@
         body {
             background: url("../static/image/login_background.jpg");background-size: 100% ;
         }
-        body:after {content:'';background-repeat:no-repeat;background-size:cover;-webkit-filter:blur(3px);-moz-filter:blur(3px);-o-filter:blur(3px);-ms-filter:blur(3px);filter:blur(3px);position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;}
+        body:after {content:'';background-repeat:no-repeat;background-size:cover;-webkit-filter:blur(3px);-moz-filter:blur(3px);-o-filter:blur(3px);
+            -ms-filter:blur(3px);filter:blur(3px);position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;}
         .layui-container {width: 100%;height: 100%;overflow: hidden}
         .admin-login-background {width:360px;height:300px;position:absolute;left:50%;top:40%;margin-left:-180px;margin-top:-100px;}
         .logo-title {text-align:center;letter-spacing:2px;padding:14px 0;}
@@ -51,35 +51,35 @@
                     <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" id="password">
                 </div>
                 <div class="layui-form-item">
-                    <button type="button" onclick="login()" class="layui-btn layui-btn-fluid" >登 入</button>
+                    <button type="button" onclick="login();" class="layui-btn layui-btn-fluid" >登 入</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script th:src="@{../static/js/layui/layui.all.js}" charset="utf-8"></script>
+<script th:src="@{../static/js/layui/layui.js}"></script>
 <script>
     var $;
+    var layer;
+    var form;
     layui.use(['form'], function () {
-        var form = layui.form;
-        var layer = layui.layer;
+        form = layui.form;
+        layer = layui.layer;
         $ = layui.jquery;
     });
 
-    var layer = layui.layer;
     function login() {
         var loginInfo = $("#login_information").serialize();
         console.log(loginInfo);
         if (loginInfo){
-            $.post("/check",loginInfo,function (response) {
-                if (response.code == 200){
+            $.post("/check", loginInfo, function (response) {
+                if (response.code == 200) {
                     layer.msg(response.message)
                     window.location.href = "/index";
-                }
-                else {
+                } else {
                     layer.msg(response.message);
                 }
-            })
+            });
         }
     }
 </script>
