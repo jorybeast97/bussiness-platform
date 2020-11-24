@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Controller("task")
 @RequestMapping(value = "/task")
@@ -45,6 +46,36 @@ public class TaskController {
         List<TaskBO> list = taskService.getLeastTaskInformation(request, response);
         model.addAttribute("least_task", list);
         return "/task/taskStatistics";
+    }
+
+    @RequestMapping(value = "/personaltask")
+    public String personalTaskPage(final HttpServletRequest request,
+                                   final HttpServletResponse response,
+                                   Model model) {
+        return "/task/personalTask";
+    }
+
+    @RequestMapping(value = "/personalTaskInfo")
+    @ResponseBody
+    public CommonResult<List<TaskBO>> getPersonalTaskInfo(final HttpServletRequest request,
+                                                          final HttpServletResponse response,
+                                                          final Integer page,
+                                                          final Integer limit) {
+        return taskService.getPersonalTaskInfo(request, response, page, limit);
+    }
+
+    @RequestMapping(value = "/personalTaskLineChart")
+    @ResponseBody
+    public Map<String, Object> getPersonalTaskLineChartInformation(final HttpServletRequest request,
+                                                                   final HttpServletResponse response) {
+        return taskService.getPersonalTaskLineChartInformation(request, response);
+    }
+
+    @RequestMapping(value = "/personalTaskDistribution")
+    @ResponseBody
+    public Map<String, Object> getPersonalTaskDistribution(final HttpServletRequest request,
+                                                         final HttpServletResponse response) {
+        return taskService.getPersonalTaskDistribution(request, response);
     }
 
     @RequestMapping(value = "/save",method = RequestMethod.POST)

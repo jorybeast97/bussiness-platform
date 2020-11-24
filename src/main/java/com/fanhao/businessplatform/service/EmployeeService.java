@@ -18,6 +18,7 @@ import com.fanhao.businessplatform.mapper.DepartmentMapper;
 import com.fanhao.businessplatform.mapper.EmployeeMapper;
 import com.fanhao.businessplatform.utils.CommonUtils;
 import com.fanhao.businessplatform.utils.HttpUtils;
+import com.fanhao.businessplatform.utils.PermissionUtils;
 import io.netty.util.internal.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +131,16 @@ public class EmployeeService {
         queryWrapper.eq("username", username);
         Employee employee = employeeMapper.selectOne(queryWrapper);
         return employee != null;
+    }
+
+    public Employee getCurrentlyLoggedInUser(final HttpServletRequest request,
+                                             final HttpServletResponse response) {
+        String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
+        String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
+        QueryWrapper<Employee> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username);
+        Employee employee = employeeMapper.selectOne(wrapper);
+        return employee;
     }
 
     private EmployeeBO generateEmployeeBO(final Employee employee) {

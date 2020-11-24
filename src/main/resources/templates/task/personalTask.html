@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>企业人事管理平台</title>
+    <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
+</head>
+<body style="background-color: whitesmoke">
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md7">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-line-chart"> 任务统计</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="taskCompared" style="width: 100% ;height: 300px">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md5">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-pie-chart"> 任务比率</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="taskRatio" style="width: 100% ;height: 300px">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-newspaper-o"> 薪资数据</i>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="personalTask" lay-filter="test"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div id="layerDemo" class="layui-btn-container">
+                            <button data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加任务</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!--引入echarts-->
+<script th:src="@{../../static/js/echart/echarts.min.js}"></script>
+<script th:src="@{../../static/js/layui/layui.js}"></script>
+<script>
+
+    //JavaScript代码区域
+    layui.use(['element','layer','table'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var table = layui.table;
+
+        table.render({
+            elem: '#personalTask'
+            ,url:'http://localhost:8081/task/personalTaskInfo'
+            ,parseData: function (res) {
+                return {
+                    "code" : res.code,
+                    "msg" : res.message,
+                    "count" : res.count,
+                    "data" : res.data
+                }
+            }
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,title: '个人任务列表'
+            ,cols: [
+                [
+                    {field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
+                    ,{field:'taskName', title:'任务名称', width:150}
+                    ,{field:'taskContent', title:'任务内容', width:150}
+                    ,{field:'sender', title:'任务创建人', width:150,templet:function (task) {
+                        return task.sender.name;
+                    }}
+                    ,{field:'receiver', title:'任务执行人', width:200,templet:function (task) {
+                        return task.receiver.name;
+                    }}
+                    ,{field:'taskStatus', title:'任务状态', width:120,templet:function (task) {
+                        if (task.taskStatus == 1) return "未开始";
+                        if (task.taskStatus == 2) return "准备中";
+                        if (task.taskStatus == 3) return "正在进行";
+                        if (task.taskStatus == 4) return "已完成";
+                        if (task.taskStatus == 5) return "失败";
+                    }}
+                    ,{field:'remark', title:'任务备注', width:200}
+                    ,{field:'createDate', title:'创建日期', width:200 ,templet: function (task) {
+                        return layui.util.toDateString(task.createDate, 'yyyy-MM-dd');
+                    }}
+                    ,{field:'createDate', title:'截至日期', width:200 ,templet: function (task) {
+                        if (task.endDate != null) {
+                            return layui.util.toDateString(task.endDate, 'yyyy-MM-dd');
+                        }else {
+                            return "无日期限制";
+                        }
+                    }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+                ]
+            ]
+            ,page: true
+            ,limit:8
+            ,limits: [8]
+        });
+
+        var active = {
+            offset: function (othis) {
+                var type = othis.data('type')
+                    ,text = othis.text();
+                var type = othis.data('type'),
+                    text = othis.text();
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: '添加任务信息' //不显示标题栏
+                    ,area: ['70%','80%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    , content: '/task/add'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    , yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        }
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var id = obj.data.id;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.get("/task/delete", {id: id}, function (response) {
+                        layer.msg(response.message);
+                        if (response.code == 200){
+                            obj.del();
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                //弹出编辑页面
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: "修改任务信息" //不显示标题栏
+                    ,area: ['60%','68%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '/task/edit?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        $('#layerDemo .layui-btn').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+        $.get("/task/personalTaskDistribution", function (result) {
+            echarts.init(document.getElementById("taskRatio")).setOption({
+                title: {
+                    text: '本月任务完成度统计',
+                    subtext: result.date,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['未开始', '准备中', '进行中', '已完成', '失败']
+                },
+                series: [
+                    {
+                        name: '任务状态',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: result.list,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+        });
+
+        $.get("/task/personalTaskLineChart",function (result) {
+            var colors = ['#5793f3', '#d14a61', '#675bba'];
+            echarts.init(document.getElementById("taskCompared")).setOption({
+                color: colors,
+
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                grid: {
+                    right: '20%'
+                },
+                legend: {
+                    data: ['正在进行', '已经完成', '总任务数']
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '总任务数',
+                        min: 0,
+                        max: 40,
+                        position: 'right',
+                        axisLine: {
+                            lineStyle: {
+                                color: colors[0]
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} 个'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '正在进行',
+                        min: 0,
+                        max: 40,
+                        position: 'right',
+                        offset: 80,
+                        axisLine: {
+                            lineStyle: {
+                                color: colors[1]
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} 个'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '已经完成',
+                        min: 0,
+                        max: 40,
+                        position: 'left',
+                        axisLine: {
+                            lineStyle: {
+                                color: colors[2]
+                            }
+                        },
+                        axisLabel: {
+                            formatter: '{value} 个'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '已经完成',
+                        type: 'bar',
+                        data: result.finishedTaskNum
+                    },
+                    {
+                        name: '正在进行',
+                        type: 'bar',
+                        yAxisIndex: 1,
+                        data: result.runningTaskNum
+                    },
+                    {
+                        name: '总任务数',
+                        type: 'line',
+                        yAxisIndex: 2,
+                        data: result.allTaskNum
+                    }
+                ]
+            });
+        })
+
+    });
+
+
+
+
+
+
+</script>
+</body>
+</html>
