@@ -143,7 +143,7 @@ public class EmployeeService {
         return employee;
     }
 
-    private EmployeeBO generateEmployeeBO(final Employee employee) {
+    public EmployeeBO generateEmployeeBO(final Employee employee) {
         if (employee == null) {
             LOGGER.warn("generateEmployeeBO - 参数为空，无法创建对应BO");
             return null;

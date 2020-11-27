@@ -50,6 +50,7 @@ public class HttpUtils {
         try {
             addressJson = restTemplate.postForObject(getBaiduApiUrl(ip), null, String.class);
         } catch (Error error) {
+            return null;
         }
         Gson gson = GsonUtils.getGson();
         Map initMap = gson.fromJson(addressJson, Map.class);

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>企业人事管理平台</title>
+    <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
+</head>
+<body style="background-color: whitesmoke">
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-newspaper-o"> 休假申请记录</i>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="personalVacation" lay-filter="test"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div id="layerDemo" class="layui-btn-container">
+                        </div>
+                    </script>
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md7">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-paste"> 申请休假</i>
+                </div>
+                <div class="layui-card-body">
+                    <div  style="width: 100% ;height: 350px">
+                        <form class="layui-form" action="" id="vacation_info">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">开始日期</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="startTime" id="createDate" lay-verify="" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结束日期</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="endTime" id="endDate" lay-verify="" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text" style="width: 95%">
+                                <label class="layui-form-label">请假原因</label>
+                                <div class="layui-input-block">
+                                    <textarea name="vacationReason" placeholder="" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text" style="width: 95%">
+                                <label class="layui-form-label">备注信息</label>
+                                <div class="layui-input-block">
+                                    <textarea  name="remark" placeholder="" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="button" onclick="doSave()" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md5">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-tags"> 请假申请流程</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="taskRatio" style="width: 100% ;height: 350px">
+                        <ul class="layui-timeline">
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis"></i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title"><font color="green">请假审核通过，允许休假</font></h3>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis"></i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">通知部门负责人</h3>
+                                    <ul>
+                                        <li>审核休假申请单是否符合标准</li>
+                                        <li>移交请假人请假期间所负责任务内容</li>
+                                        <li>完成请假批准</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis"></i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">提交请假申请工单</h3>
+                                    <p>申请休假需必须提供以下信息，其余信息按照个人情况斟酌填写</p>
+                                    <ul>
+                                        <li>具体日期(明确起止时间)</li>
+                                        <li>明确请假原因</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis"></i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title"><font color="orange">准备请假所需材料</font></h3>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!--引入echarts-->
+<script th:src="@{../../static/js/echart/echarts.min.js}"></script>
+<script th:src="@{../../static/js/layui/layui.js}"></script>
+<script>
+    var $;
+    //JavaScript代码区域
+    layui.use(['element','layer','table','form','laydate'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        $ = layui.jquery;
+        var table = layui.table;
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        //日期渲染
+        laydate.render({
+            elem: '#createDate'
+        });
+        laydate.render({
+            elem: '#endDate'
+        });
+
+        table.render({
+            elem: '#personalVacation'
+            ,url:'/vacation/personalVacationInformation'
+            ,parseData: function (res) {
+                return {
+                    "code" : res.code,
+                    "msg" : res.message,
+                    "count" : res.count,
+                    "data" : res.data
+                }
+            }
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,title: '部门休假申请表'
+            ,cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
+                    ,{field:'applicant', title:'申请人', width:150,templet:function (vacation) {
+                        return vacation.applicant.name;
+                    }}
+                    ,{field:'department', title:'所属部门', width:150,templet:function (vacation) {
+                        return vacation.department.departmentName;
+                    }}
+                    ,{field:'vacationReason', title:'请假原因', width:150}
+                    ,{field:'remark', title:'状态', width:150,templet(vacation){
+                        if (vacation.approvalStatus == 1) {
+                            return '<font color="green">通过</font>';
+                        }
+                        if (vacation.approvalStatus == 2){
+                            return '<font color="red">不通过</font>';
+                        }
+                        else {
+                            return '<font color="#696969">待审核</font>';
+                        }
+                    }}
+                    ,{field:'startTime', title:'起始日期', width:200 ,templet: function (vacation) {
+                        return layui.util.toDateString(vacation.startTime, 'yyyy-MM-dd');
+                    }}
+                    ,{field:'endTime', title:'起始日期', width:200 ,templet: function (vacation) {
+                        return layui.util.toDateString(vacation.endTime, 'yyyy-MM-dd');
+                    }}
+                    ,{field:'remark', title:'备注', width:150}
+                    ,{field:'createTime', title:'申请日期', width:200 ,templet: function (vacation) {
+                        return layui.util.toDateString(vacation.createTime, 'yyyy-MM-dd');
+                    }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:200}
+                ]
+            ]
+            ,page: true
+            ,limit:8
+            ,limits: [8]
+        });
+
+        var active = {
+            offset: function (othis) {
+                var type = othis.data('type')
+                    ,text = othis.text();
+                var type = othis.data('type'),
+                    text = othis.text();
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: '申请休假' //不显示标题栏
+                    ,area: ['70%','80%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    , content: '/vacation/addVacation'//跳转到想要的界面，这里是我自己项目的跳转界面
+                    , yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        }
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){
+            var id = obj.data.id;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.get("/vacation/delete", {id: id}, function (response) {
+                        layer.msg(response.message);
+                        if (response.code == 200){
+                            obj.del();
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                //弹出编辑页面
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: "修改任务信息" //不显示标题栏
+                    ,area: ['60%','68%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '/vacation/editVacation?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        $('#layerDemo .layui-btn').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+    });
+
+
+    var layer = layui.layer;
+    //调用Jquery发送表单数据到后台接口
+    function doSave() {
+        var vacation = $("#vacation_info").serialize();
+        if (vacation)
+            $.post("/vacation/add",vacation,function (response) {
+                layer.msg(response.message);
+            })
+    }
+
+
+
+</script>
+</body>
+</html>

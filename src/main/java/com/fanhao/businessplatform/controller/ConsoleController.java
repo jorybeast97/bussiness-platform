@@ -34,7 +34,7 @@ public class ConsoleController {
                               Model model) throws UnknownHostException {
         model.addAttribute("cpu_info", CommonUtils.cpuLoad());
         model.addAttribute("memory_info", CommonUtils.memoryLoad());
-        model.addAttribute("ip_address", consoleService.getIpAddress(request));
+        model.addAttribute("ip_address", "S");
         model.addAttribute("jdk_version", CommonUtils.jdkInfo());
 
         List<String> list = new ArrayList<>();
