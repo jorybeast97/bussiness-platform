@@ -85,6 +85,18 @@ public class VacationController {
         return vacationService.addVacation(request, response, vacationReason, startTime, endTime, remark);
     }
 
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public CommonResult<String> updateVacation(final HttpServletRequest request,
+                                               final HttpServletResponse response,
+                                               Integer id,
+                                               String vacationReason,
+                                               String startTime,
+                                               String endTime,
+                                               String remark) {
+        return vacationService.updateVacation(request, response, id, vacationReason, startTime, endTime, remark);
+    }
+
     @RequestMapping(value = "/delete")
     @ResponseBody
     public CommonResult<String> deleteVacation(Integer id) {

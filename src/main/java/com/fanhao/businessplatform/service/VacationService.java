@@ -51,6 +51,24 @@ public class VacationService {
         return commonResult;
     }
 
+    public CommonResult<String> updateVacation(final HttpServletRequest request,
+                                               final HttpServletResponse response,
+                                               Integer id,
+                                               String vacationReason,
+                                               String startTime,
+                                               String endTime,
+                                               String remark) {
+        Vacation vacation = vacationMapper.selectById(id);
+        vacation.setVacationReason(vacationReason);
+        vacation.setStartTime(CommonUtils.parseDateFromString(startTime));
+        vacation.setEndTime(CommonUtils.parseDateFromString(endTime));
+        vacation.setRemark(remark);
+        vacationMapper.updateById(vacation);
+        CommonResult<String> commonResult = new CommonResult<>();
+        commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
+        commonResult.setMessage("修改成功");
+        return commonResult;
+    }
     /**
      * 新增任务
      * @param request

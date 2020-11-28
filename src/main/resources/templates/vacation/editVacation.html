@@ -16,6 +16,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">开始日期</label>
                 <div class="layui-input-inline">
+                    <input type="hidden" name="id" th:value="${vacation.getId()}">
                     <input th:value="${#dates.format(vacation.getCreateTime(),'yyyy-MM-dd')}" type="text" name="startTime" id="createDate" lay-verify="" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                 </div>
             </div>
@@ -41,7 +42,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button type="button" onclick="doSave()" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="button" onclick="doUpdate()" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -71,10 +72,10 @@
 
     var layer = layui.layer;
     //调用Jquery发送表单数据到后台接口
-    function doSave() {
+    function doUpdate() {
         var vacation = $("#vacation_info").serialize();
         if (vacation)
-            $.post("/vacation/add",vacation,function (response) {
+            $.post("/vacation/update",vacation,function (response) {
                 layer.msg(response.message);
             })
     }
