@@ -19,9 +19,10 @@
                 <span class="layui-badge-dot"></span>
                 <a href="javascript:;">个人考勤</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">到岗签到</a></dd>
-                    <dd><a href="javascript:;">离岗签到</a></dd>
-                    <dd th:remove="${role}"><a href="">考勤信息</a></dd>
+                    <dd><a href="javascript:;" onclick="signIn()">到岗签到</a></dd>
+                    <dd><a href="javascript:;" onclick="signOut()">离岗签退</a></dd>
+                    <dd><a href="/attendance/personalAttendance" target="content_iframe">个人考勤</a></dd>
+                    <dd th:remove="${role}"><a href="/attendance/departmentAttendance" target="content_iframe">部门考勤</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item">
@@ -32,7 +33,10 @@
                 </dl>
             </li>
             <li class="layui-nav-item">
-                <a href="/employee/editpersonalinfo" target="content_iframe">个人信息</a>
+                <a href="javascript:;">个人信息</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/employee/editpersonalinfo" target="content_iframe">修改信息</a></dd>
+                </dl>
             </li>
             <li class="layui-nav-item">
                 <a href="javascript:;">
@@ -142,6 +146,18 @@
         $.get("/logout",function (response) {
             window.location.href = "/login";
             layer.msg("退出登录成功")
+        })
+    }
+
+    function signIn() {
+        $.get("/attendance/signIn",function (response) {
+            layer.msg(response.message)
+        })
+    }
+
+    function signOut() {
+        $.get("/attendance/signOut",function (response) {
+            layer.msg(response.message)
         })
     }
 

@@ -11,6 +11,30 @@ import java.util.Date;
 public class CommonUtils {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    /**
+     * 获取两个时间值差值并变为 XXX小时XX分钟的状态
+     * @return
+     */
+    public static String getPeriodFromDate(Long time) {
+        long hour = 1000 * 60 * 60;
+        long minute = 1000 * 60;
+        long second = 1000;
+        String result = "";
+        int temp = 0;
+        while (time >= hour) {
+            temp += time / hour;
+            time = time % hour;
+        }
+        result = result + temp + "小时";
+        temp = 0;
+        while (time  >= minute) {
+            temp += time / minute;
+            time = time % minute;
+        }
+        result = result + temp + "分钟";
+        return result;
+    }
+
     //date转为String
     public static String parseStringFromDate(final Date date,
                                              final String form) {

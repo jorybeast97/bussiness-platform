@@ -47,4 +47,13 @@ class BusinessPlatformApplicationTests {
         System.out.println(username + name + role);
     }
 
+    @Test
+    void test() {
+        Date startTime = new Date();
+        Date endTime = DateUtil.endOfDay(startTime);
+        System.out.println(CommonUtils.parseStringFromDate(startTime, "yyyy-MM-dd HH:mm"));
+        System.out.println(CommonUtils.parseStringFromDate(endTime, "yyyy-MM-dd HH:mm"));
+        System.out.println(CommonUtils.getPeriodFromDate(endTime.getTime() - startTime.getTime()));
+    }
+
 }
