@@ -35,6 +35,13 @@ public class EmployeeController {
         return "/employee/employeelist";
     }
 
+    @RequestMapping(value = "/editPasswordPage")
+    public String editPasswordPage(final HttpServletRequest request,
+                                   final HttpServletResponse response,
+                                   Model model) {
+        return "/employee/editPassword";
+    }
+
     @RequestMapping(value = "/addemployee")
     public String addEmployeePage() {
         return "/employee/addEmployee";
@@ -57,6 +64,16 @@ public class EmployeeController {
         String roleResult = permissionService.checkUserPermission(request, response);
         model.addAttribute(PermissionUtils.JWT_TOKEN_ROLE, roleResult);
         return "/employee/editPersonalInfo";
+    }
+
+    @RequestMapping(value = "/editPassword")
+    @ResponseBody
+    public CommonResult<String> editPassword(final HttpServletRequest request,
+                                             final HttpServletResponse response,
+                                             String oldPassword,
+                                             String newPassword,
+                                             String rePassword) {
+        return employeeService.editPassword(request, response, oldPassword, newPassword, rePassword);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)

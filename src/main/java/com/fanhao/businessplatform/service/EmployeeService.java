@@ -48,6 +48,38 @@ public class EmployeeService {
         return true;
     }
 
+    public CommonResult<String> editPassword(final HttpServletRequest request,
+                                             final HttpServletResponse response,
+                                             String oldPassword,
+                                             String newPassword,
+                                             String rePassword) {
+        CommonResult<String> commonResult = new CommonResult<>();
+        if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(rePassword)){
+            commonResult.setMessage("密码不能为空");
+            commonResult.setCode(ResultStatus.FAILED.getResultCode());
+            return commonResult;
+        }
+        if (!newPassword.equals(rePassword)){
+            commonResult.setMessage("重复输入密码不一致！");
+            commonResult.setCode(ResultStatus.FAILED.getResultCode());
+            return commonResult;
+        }
+        Employee employee = getCurrentlyLoggedInUser(request, response);
+        String oldPasswordAfterMD5 = SecureUtil.md5(oldPassword);
+        if (!oldPasswordAfterMD5.equals(employee.getPassword())) {
+            commonResult.setMessage("旧密码不正确");
+            commonResult.setCode(ResultStatus.FAILED.getResultCode());
+            return commonResult;
+        }
+        employee.setPassword(SecureUtil.md5(newPassword));
+        employeeMapper.updateById(employee);
+        commonResult.setMessage("修改成功,请刷新页面重新登录");
+        commonResult.setCode(ResultStatus.SUCCESS.getResultCode());
+        //注销当前用户
+        HttpUtils.writeCookie(response, PermissionUtils.TOKEN, null, 0);
+        return commonResult;
+    }
+
     public CommonResult<List<EmployeeBO>> searchByNameAndIdCard(String name,
                                                                 String idCard) {
         QueryWrapper<Employee> wrapper = new QueryWrapper<>();

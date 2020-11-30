@@ -1,8 +1,10 @@
 package com.fanhao.businessplatform.controller;
 
 import com.fanhao.businessplatform.common.CommonResult;
+import com.fanhao.businessplatform.entity.Message;
 import com.fanhao.businessplatform.service.EmployeeService;
 import com.fanhao.businessplatform.service.LoginService;
+import com.fanhao.businessplatform.service.MessageService;
 import com.fanhao.businessplatform.service.PermissionService;
 import com.fanhao.businessplatform.utils.HttpUtils;
 import com.fanhao.businessplatform.utils.PermissionUtils;
@@ -25,6 +27,9 @@ public class LoginController {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private MessageService messageService;
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
         return "/login";
@@ -39,6 +44,7 @@ public class LoginController {
         String roleResult = permissionService.checkUserPermission(request, response);
         model.addAttribute(PermissionUtils.JWT_TOKEN_NAME, name);
         model.addAttribute(PermissionUtils.JWT_TOKEN_ROLE, roleResult);
+        model.addAttribute("messageInfo", messageService.getNavigationBarMark(request, response));
         return "index";
     }
 

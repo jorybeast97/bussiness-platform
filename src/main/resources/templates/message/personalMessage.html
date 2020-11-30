@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>企业人事管理平台</title>
+    <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
+</head>
+<body style="background-color: whitesmoke">
+<div style="padding: 20px; background-color: #F2F2F2;">
+
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-paste"> 发送消息</i>
+                </div>
+                <div class="layui-card-body" style="width: 100%;height: 300px">
+                    <div  style="width: 100%">
+                        <form class="layui-form" action="" id="sendMessage">
+
+                            <div class="layui-form-item" style="width: 95%">
+                                <label class="layui-form-label">接收人</label>
+                                <div class="layui-input-block">
+                                    <select name="receiver" lay-verify="required" lay-search=""
+                                            th:with="employeelist=${@employee.employeeList(1,10000,null,null).getData()}">
+                                        <option value="" selected="">请选择</option>
+                                        <option th:each="employee : ${employeelist}"
+                                                th:text="${employee.getName() + ' - ' +employee.getPosition() + ' : ' + employee.getIdCard()}"
+                                                th:value="${employee.getId()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item" style="width: 95%">
+                                <label class="layui-form-label">消息标题</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text" style="width: 95%">
+                                <label class="layui-form-label">消息内容</label>
+                                <div class="layui-input-block">
+                                    <textarea  name="content" placeholder="" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="button" onclick="doSave()" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">发送消息</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-tags"> 消息内容</i>
+                </div>
+                <div class="layui-card-body">
+                    <div id="taskRatio" style="width: 100% ;height: 300px">
+                        <div id="message_line" style="width: 100%;height: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-newspaper-o"> 个人接受消息</i>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="personalReceiveMessage" lay-filter="personalReceiveMessage"></table>
+                    <script type="text/html" id="barDemoPersonalReceiveMessage">
+                        <a class="layui-btn layui-btn-xs" lay-event="view">查看详情</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <!-- 进度条相关 -->
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <i class="fa fa-newspaper-o"> 个人发送消息</i>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="personalSendMessage" lay-filter="personalSendMessage"></table>
+                    <script type="text/html" id="barDemoPersonalSendMessage">
+                        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="del">删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<!--引入echarts-->
+<script th:src="@{../../static/js/echart/echarts.min.js}"></script>
+<script th:src="@{../../static/js/layui/layui.js}"></script>
+<script>
+    var layer;
+    //JavaScript代码区域
+    layui.use(['element','layer','table','form','laydate'], function(){
+        var element = layui.element;
+        layer = layui.layer;
+        var $ = layui.jquery;
+        var table = layui.table;
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        table.render({
+            elem: '#personalReceiveMessage'
+            ,url:'/message/getPersonalReceiveMessage'
+            ,parseData: function (res) {
+                return {
+                    "code" : res.code,
+                    "msg" : res.message,
+                    "count" : res.count,
+                    "data" : res.data
+                }
+            }
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,title: '个人收到信息'
+            ,cols: [
+                [
+                    {field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
+                    ,{field:'sender', title:'发送者', width:120, fixed: 'left', unresize: true, templet:function (message) {
+                        return message.sender.name;
+                    }}
+                    ,{field:'title', title:'标题', width:150}
+                    ,{field:'content', title:'消息内容', width:250}
+                    ,{field:'createTime', title:'发放日期', width:180,templet:function (message) {
+                        return layui.util.toDateString(message.createTime, 'yyyy-MM-dd HH:mm:ss');
+                    }}
+                    ,{field:'content', title:'状态', width:150,templet:function (message) {
+                        if (message.status == false){
+                            return '<font color="red">未读</font>';
+                        }else {
+                            return '<font color="green">已读</font>';
+                        }
+                    }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemoPersonalReceiveMessage', width:200}
+                ]
+            ]
+            ,page: true
+            ,limit:8
+            ,limits: [8]
+        });
+
+        //监听行工具事件
+        table.on('tool(personalReceiveMessage)', function(obj){
+            var id = obj.data.id;
+            if(obj.event == 'view'){
+                //弹出编辑页面
+                layer.open({
+                    type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                    ,offset: 'auto'
+                    ,title: "查看消息详情" //不显示标题栏
+                    ,area: ['40%','68%']//定义宽高
+                    ,shade: 0.8//遮幕
+                    ,id: 'LAY_layuipro'//设定一个id，防止重复弹出
+                    ,btn: '关闭窗口'
+                    ,btnAlign: 'c'//按钮排列：居中对齐
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '/message/viewMessage?id='+id//跳转到想要的界面，这里是我自己项目的跳转界面
+                    ,yes : function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.render({
+            elem: '#personalSendMessage'
+            ,url:'/message/getPersonalSendMessage'
+            ,parseData: function (res) {
+                return {
+                    "code" : res.code,
+                    "msg" : res.message,
+                    "count" : res.count,
+                    "data" : res.data
+                }
+            }
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,title: '个人收到信息'
+            ,cols: [
+                [
+                    {field:'id', title:'ID', width:120, fixed: 'left', unresize: true, sort: true}
+                    ,{field:'receiver', title:'接收人', width:120, fixed: 'left', unresize: true, templet:function (message) {
+                        return message.receiver.name;
+                    }}
+                    ,{field:'title', title:'标题', width:150}
+                    ,{field:'content', title:'消息内容', width:250}
+                    ,{field:'createTime', title:'发放日期', width:180,templet:function (message) {
+                        return layui.util.toDateString(message.createTime, 'yyyy-MM-dd HH:mm:ss');
+                    }}
+                    ,{field:'content', title:'状态', width:150,templet:function (message) {
+                        if (message.status == false){
+                            return '<font color="red">对方未读</font>';
+                        }else {
+                            return '<font color="green">对方已读</font>';
+                        }
+                    }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemoPersonalSendMessage', width:200}
+                ]
+            ]
+            ,page: true
+            ,limit:8
+            ,limits: [8]
+        });
+
+        //监听行工具事件
+        table.on('tool(personalSendMessage)', function(obj){
+            var id = obj.data.id;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    $.get("/message/delete", {id: id}, function (response) {
+                        layer.msg(response.message);
+                        if (response.code == 200){
+                            obj.del();
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        $('#layerDemo .layui-btn').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+        $.get("/message/getEchartsInformation", function (result) {
+            echarts.init(document.getElementById("message_line")).setOption({
+                xAxis: {
+                    type: 'category',
+                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: result,
+                    type: 'bar'
+                }]
+            });
+        });
+
+    });
+
+
+    function doSave() {
+        var messageInfo = $("#sendMessage").serialize();
+        if (messageInfo)
+            $.post("/message/addOrUpdate",messageInfo,function (response) {
+                layer.msg(response.message);
+            })
+    }
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
