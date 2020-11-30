@@ -55,8 +55,6 @@ public class MessageService {
             Date preWeekEndTime = new Date(preWeekStartTime.getTime() + oneDayToMills);
             QueryWrapper<Message> wrapper = new QueryWrapper<>();
             wrapper.eq("sender", employee.getId())
-                    .or()
-                    .eq("receiver", employee.getId())
                     .between("create_time", preWeekStartTime, preWeekEndTime);
             List<Message> list = messageMapper.selectList(wrapper);
             result.add(String.valueOf(list.size()));
