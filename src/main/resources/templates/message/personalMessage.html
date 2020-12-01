@@ -116,11 +116,12 @@
 <script th:src="@{../../static/js/layui/layui.js}"></script>
 <script>
     var layer;
+    var $;
     //JavaScript代码区域
     layui.use(['element','layer','table','form','laydate'], function(){
         var element = layui.element;
         layer = layui.layer;
-        var $ = layui.jquery;
+        $ = layui.jquery;
         var table = layui.table;
         var form = layui.form;
         var laydate = layui.laydate;
