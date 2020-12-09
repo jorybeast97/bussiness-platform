@@ -27,7 +27,6 @@ public class PermissionUtils {
     public static final String JWT_TOKEN_USERNAME = "username";
     public static final String JWT_TOKEN_ROLE = "role";
     public static final String JWT_TOKEN_NAME = "name";
-    public static final String JWT_TOKEN_EXPIRE_TIME = "expire_time";
 
     private static String secretKey;
 
@@ -39,15 +38,13 @@ public class PermissionUtils {
      * 生成JWT Token，可添加补充信息
      * @param username
      * @param role
-     * @param expireTime
      * @param additionalInfo
      * @return
      */
     public static String generateJWT(String username,
                                      String role,
                                      String name,
-                                     Long expireTime,Map<String,Object> additionalInfo) {
-        long expire = expireTime == null ? DEFAULT_TOKEN_EXPIRE_TIME : expireTime;
+                                     Map<String,Object> additionalInfo) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(role)) return null;
         Map<String, Object> payload = new HashMap<>();
         payload.put(JWT_TOKEN_USERNAME, username);
@@ -59,7 +56,6 @@ public class PermissionUtils {
                 .setSubject(subject)
                 .setClaims(payload)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expire))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
         return token;
@@ -122,7 +118,6 @@ public class PermissionUtils {
         if (claims != null) {
             information.put(JWT_TOKEN_USERNAME, claims.get(JWT_TOKEN_USERNAME, String.class));
             information.put(JWT_TOKEN_ROLE, claims.get(JWT_TOKEN_ROLE, String.class));
-            information.put(JWT_TOKEN_EXPIRE_TIME, String.valueOf(claims.getExpiration().getTime()));
             information.put(JWT_TOKEN_NAME, claims.get(JWT_TOKEN_NAME, String.class));
         }
         return information;

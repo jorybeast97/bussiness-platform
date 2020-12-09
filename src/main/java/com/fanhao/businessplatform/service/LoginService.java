@@ -87,7 +87,7 @@ public class LoginService {
         String username = employee.getUsername();
         String name = employee.getName();
         String role = employee.getRole();
-        String token = PermissionUtils.generateJWT(username, role, name, PermissionUtils.DEFAULT_TOKEN_EXPIRE_TIME, null);
+        String token = PermissionUtils.generateJWT(username, role, name, null);
         return token;
     }
 }
