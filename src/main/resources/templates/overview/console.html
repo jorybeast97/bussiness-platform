@@ -13,14 +13,72 @@
         <!-- 快速入口 -->
         <div class="layui-col-md4">
             <div class="layui-card">
-                <div class="layui-card-body">
-                    <div class="layui-carousel" id="test1" lay-filter="test1">
-                        <div carousel-item="">
-                            <div><img src="../../static/image/974e824ff5ac153e81c4f49b5c7b4f3a.jpg" style="width: 100%;height: 100%"></div>
-                            <div><img src="../../static/image/Desert%20Storm.jpg" style="width: 100%;height: 100%"></div>
-                            <div><img src="../../static/image/El%20Capitan.jpg" style="width: 100%;height: 100%"></div>
-                            <div><img src="../../static/image/High%20Sierra.jpg" style="width: 100%;height: 100%"></div>
-                            <div><img src="../../static/image/Mojave%20Day.jpg" style="width: 100%;height: 100%"></div>
+                <div class="layui-card-header">
+                    <i class="fa fa-bar-chart"> 快捷入口</i>
+                </div>
+                <div class="layui-card-body" style="height: 170px">
+                    <div class="layui-row layui-col-space4">
+                        <div class="layui-col-md4">
+                            <a href="/message/personalMessage">
+                                <div class="layui-card-body" style="background-color: whitesmoke;height: 55px">
+                                   <div style="width: 100%;height: 70%;text-align: center">
+                                       <i class="fa fa-comments-o" style="font-size: 30px" aria-hidden="true"></i>
+                                   </div>
+                                    <div style="width: 100%;height: 30%;text-align: center">
+                                        消息通知
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="layui-col-md4">
+                            <a href="/task/personaltask">
+                                <div class="layui-card-body" style="background-color: whitesmoke;height: 55px">
+                                    <div style="width: 100%;height: 70%;text-align: center">
+                                        <i class="fa fa-tasks" style="font-size: 30px" aria-hidden="true"></i>
+                                    </div>
+                                    <div style="width: 100%;height: 30%;text-align: center">
+                                        个人任务
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="layui-col-md4">
+                            <a href="/salary/personalsalary">
+                                <div class="layui-card-body" style="background-color: whitesmoke;height: 55px">
+                                    <div style="width: 100%;height: 70%;text-align: center">
+                                        <i class="fa fa-money" style="font-size: 30px" aria-hidden="true"></i>
+                                    </div>
+                                    <div style="width: 100%;height: 30%;text-align: center">
+                                        个人薪资
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space4">
+                        <div class="layui-col-md8">
+                            <a href="/employee/">
+                                <div class="layui-card-body" style="background-color: whitesmoke;height: 55px">
+                                    <div style="width: 100%;height: 70%;text-align: center">
+                                        <i class="fa fa-id-card-o" style="font-size: 30px" aria-hidden="true"></i>
+                                    </div>
+                                    <div style="width: 100%;height: 30%;text-align: center">
+                                        员工信息
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="layui-col-md4">
+                            <a href="/department/">
+                                <div class="layui-card-body" style="background-color: whitesmoke;height: 55px">
+                                    <div style="width: 100%;height: 70%;text-align: center">
+                                        <i class="fa fa-users" style="font-size: 30px" aria-hidden="true"></i>
+                                    </div>
+                                    <div style="width: 100%;height: 30%;text-align: center">
+                                        部门信息
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -32,7 +90,7 @@
                 <div class="layui-card-header">
                     <i class="fa fa-bar-chart"> 系统监控</i>
                 </div>
-                <div class="layui-card-body">
+                <div class="layui-card-body" style="height: 170px">
                     <div style="margin-top: 3px">
                         <i class="layui-icon layui-icon-engine" style="font-size: 100%;color: gray"> CPU占用率</i>
                         <div class="layui-progress" style="margin-top: 5px">
@@ -66,7 +124,7 @@
                 <div class="layui-card-header">
                     <i class="fa fa-unlink"> 系统信息</i>
                 </div>
-                <div class="layui-card-body">
+                <div class="layui-card-body" style="height: 170px">
                     <table class="layui-table">
                         <colgroup>
                             <col width="100">

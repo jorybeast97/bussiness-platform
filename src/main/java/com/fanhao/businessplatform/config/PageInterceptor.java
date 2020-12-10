@@ -2,6 +2,8 @@ package com.fanhao.businessplatform.config;
 
 import com.fanhao.businessplatform.utils.HttpUtils;
 import com.fanhao.businessplatform.utils.PermissionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -9,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
+/**
+ * 全局拦截器
+ */
 @Service("pageInterceptor")
 public class PageInterceptor implements HandlerInterceptor {
+    private Logger LOGGER = LoggerFactory.getLogger(PageInterceptor.class);
 
     /**
      * 全局拦截器,当在Cookie中检测不到有效Cookie时，重定向到登录页面
@@ -27,7 +33,6 @@ public class PageInterceptor implements HandlerInterceptor {
             response.sendRedirect("/login");
             return false;
         }
-        Map<String, String> tokenInfo = PermissionUtils.getClaimsInformation(token);
         return true;
     }
 }
