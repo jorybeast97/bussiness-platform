@@ -16,13 +16,6 @@
         </div>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="/message/personalMessage" target="content_iframe">
-                    消息通知
-                    <span th:remove="${messageInfo.get('present')}" th:text="${messageInfo.get('num')}" class="layui-badge"></span>
-                </a>
-
-            </li>
-            <li class="layui-nav-item">
                 <a href="javascript:;">考勤信息</a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" onclick="signIn()">到岗签到</a></dd>
@@ -58,7 +51,7 @@
                         <i class="fa fa-home"> 系统首页</i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a href="JavaScript:">
                         <i class="fa fa-user-circle"> 企业信息</i>
                     </a>
@@ -67,16 +60,16 @@
                         <dd><a href="/department/" target="content_iframe"> 部门信息</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a href="JavaScript:">
-                        <i class="fa fa-user-circle"> 薪资信息</i>
+                        <i class="fa fa-money"> 薪资信息</i>
                     </a>
                     <dl class="layui-nav-child">
                         <dd th:remove="${role}"><a href="/salary/" target="content_iframe"> 薪资列表</a></dd>
                         <dd><a href="/salary/personalsalary" target="content_iframe"> 个人薪资</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a href="JavaScript:">
                         <i class="fa fa-tasks"> 任务流程</i>
                     </a>
@@ -85,9 +78,9 @@
                         <dd><a href="/task/personaltask" target="content_iframe"> 个人任务</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a href="JavaScript:">
-                        <i class="fa fa-tasks"> 休假系统</i>
+                        <i class="fa fa-wpforms"> 休假系统</i>
                     </a>
                     <dl class="layui-nav-child">
                         <dd th:remove="${role}"><a href="/vacation/" target="content_iframe"> 休假审核</a></dd>
@@ -95,6 +88,14 @@
                     </dl>
                 </li>
                 <li class="layui-nav-item layui-nav-itemed">
+                    <a href="/message/personalMessage/" target="content_iframe">
+                        <i class="fa fa-commenting">
+                            消息通知
+                            <span th:remove="${messageInfo.get('present')}" th:text="${messageInfo.get('num')}" class="layui-badge"></span>
+                        </i>
+                    </a>
+                </li>
+                <li class="layui-nav-item">
                     <a href="JavaScript:">
                         <i class="fa fa-file-code-o"> 日志信息</i>
                     </a>
