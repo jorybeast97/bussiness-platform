@@ -3,6 +3,7 @@ package com.fanhao.businessplatform;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.fanhao.businessplatform.cache.CacheOperation;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.service.ConsoleService;
 import com.fanhao.businessplatform.service.TaskService;
@@ -13,6 +14,8 @@ import org.apache.http.client.HttpClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.InetAddress;
@@ -38,6 +41,10 @@ class BusinessPlatformApplicationTests {
     @Autowired
     private ConsoleService consoleService;
 
+    @Autowired
+    private CacheOperation cacheOperation;
+
+
     @Test
     void contextLoads() {
         String token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoibm9ybWFsIiwibmFtZSI6IuaZrumAmua1i-ivlei0puWPtyIsImV4cCI6MTYwNjIwMjk0OCwiaWF0IjoxNjA2MTE2NTQ4LCJ1c2VybmFtZSI6InRlc3QifQ.6aSNHczZKxouma8DAd8H0MWtYMJZ37ow1JKwzj8iDeE";
@@ -54,6 +61,13 @@ class BusinessPlatformApplicationTests {
         System.out.println(CommonUtils.parseStringFromDate(startTime, "yyyy-MM-dd HH:mm"));
         System.out.println(CommonUtils.parseStringFromDate(endTime, "yyyy-MM-dd HH:mm"));
         System.out.println(CommonUtils.getPeriodFromDate(endTime.getTime() - startTime.getTime()));
+    }
+
+    @Test
+    void cacheTest() {
+        cacheOperation.getOnlineUserList().forEach(employee -> {
+            System.out.println(employee);
+        });
     }
 
 }
