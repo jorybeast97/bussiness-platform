@@ -10,42 +10,58 @@
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
+    <div class="layui-header" style="background-color: #333333">
         <div class="layui-logo">
             <img th:src="@{../static/image/logo.png}" style="width: 80% ; height: 95%">
         </div>
-        <ul class="layui-nav layui-layout-right">
+        <ul class="layui-nav layui-layout-right" style="letter-spacing: 8px">
             <li class="layui-nav-item">
-                <a href="javascript:;">考勤信息</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" onclick="signIn()">到岗签到</a></dd>
-                    <dd><a href="javascript:;" onclick="signOut()">离岗签退</a></dd>
-                    <dd><a href="/attendance/personalAttendance" target="content_iframe">个人考勤</a></dd>
-                    <dd th:remove="${role}"><a href="/attendance/departmentAttendance" target="content_iframe">部门考勤</a></dd>
-                </dl>
+                <button  onclick="refresh();"
+                         class="layui-btn layui-btn-sm" style="background-color: transparent">
+                    <i class="fa fa-refresh"> </i>
+                </button>
             </li>
             <li class="layui-nav-item">
-                <a href="javascript:;">个人信息</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="/employee/editpersonalinfo" target="content_iframe">修改信息</a></dd>
-                    <dd><a href="javascript:;" onclick="editPassword()">修改密码</a></dd>
-                </dl>
+                <button id="alarm-fullscreen-toggler"  onclick="fullScreen();"
+                        class="layui-btn layui-btn-sm" style="background-color: transparent">
+                    <i class="fa fa-window-maximize"> </i>
+                </button>
             </li>
             <li class="layui-nav-item">
+                <button  onclick="signIn();"
+                        class="layui-btn layui-btn-sm" style="background-color: transparent" title="到岗签到">
+                    <i class="fa fa-check-circle"> </i>
+                </button>
+            </li>
+            <li class="layui-nav-item">
+                <button  onclick="signOut();"
+                         class="layui-btn layui-btn-sm" style="background-color: transparent" title="离岗签退">
+                    <i class="fa fa-send"> </i>
+                </button>
+            </li>
+            <li class="layui-nav-item" style="letter-spacing: normal">
                 <a href="javascript:;">
                     <img th:src="@{../static/image/user_image.png}" class="layui-nav-img">[[${name}]]
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:;" onclick="logout()">退出登录</a> </dd>
+                    <dd><a href="/employee/editpersonalinfo" target="content_iframe">修改信息</a></dd>
+                    <dd><a href="javascript:;" onclick="editPassword()">修改密码</a></dd>
                 </dl>
+            </li>
+            <li class="layui-nav-item">
+                <button onclick="baseInfo();"
+                        class="layui-btn layui-btn-sm" style="background-color: transparent">
+                    <i class="fa fa-align-justify"> </i>
+                </button>
             </li>
         </ul>
     </div>
 
-    <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
+    <div class="layui-side" style="background-color: #333333">
+        <div class="layui-side-scroll" >
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test" style="background-color:  #333333">
                 <li class="layui-nav-item layui-nav-itemed">
                     <a href="/console/" target="content_iframe">
                         <i class="fa fa-home"> 系统首页</i>
@@ -97,6 +113,15 @@
                 </li>
                 <li class="layui-nav-item">
                     <a href="JavaScript:">
+                        <i class="fa fa-credit-card"> 考勤记录</i>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd th:remove="${role}"><a href="/attendance/departmentAttendance" target="content_iframe">部门考勤</a></dd>
+                        <dd><a href="/attendance/personalAttendance" target="content_iframe">个人考勤</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="JavaScript:">
                         <i class="fa fa-file-code-o"> 日志信息</i>
                     </a>
                     <dl class="layui-nav-child">
@@ -109,7 +134,7 @@
     </div>
 
     <div class="layui-body" style="background-color: whitesmoke">
-        <iframe name="content_iframe" frameborder="no" border="0" class="larry-iframe"
+        <iframe id= "content_iframe" name="content_iframe" frameborder="no" border="0" class="larry-iframe"
                 style="width: 100%;height: 100%" src="/console">
         </iframe>
     </div>
@@ -160,6 +185,54 @@
         $.get("/attendance/signOut",function (response) {
             layer.msg(response.message)
         })
+    }
+    //全屏功能
+    function fullScreen() {
+        var element = document.documentElement;		// 返回 html dom 中的root 节点 <html>
+        if(!$('body').hasClass('full-screen')) {
+            $('body').addClass('full-screen');
+            $('#alarm-fullscreen-toggler').addClass('active');
+            // 判断浏览器设备类型
+            if(element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen){	// 兼容火狐
+                element.mozRequestFullScreen();
+            } else if(element.webkitRequestFullscreen) {	// 兼容谷歌
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {	// 兼容IE
+                element.msRequestFullscreen();
+            }
+        } else {			// 退出全屏
+            console.log(document);
+            $('body').removeClass('full-screen');
+            $('#alarm-fullscreen-toggler').removeClass('active');
+            //	退出全屏
+            if(document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    function baseInfo(){
+        layer.open({
+            type: 2,
+            title: '更新日志',
+            shadeClose: true,
+            shade: 0.9,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['893px', '600px'],
+            content: '/console/releaseLog'
+        });
+    }
+
+    function refresh() {
+        document.getElementById('content_iframe').contentWindow.location.reload();
     }
 
 

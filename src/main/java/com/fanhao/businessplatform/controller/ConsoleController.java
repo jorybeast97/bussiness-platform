@@ -43,6 +43,13 @@ public class ConsoleController {
         return "/overview/console";
     }
 
+    @RequestMapping(value = "releaseLog",method = RequestMethod.GET)
+    public String releastLogPage(final HttpServletRequest request,
+                              final HttpServletResponse response,
+                              Model model) throws UnknownHostException {
+        return "/overview/releaseLog";
+    }
+
     @RequestMapping("/getPersonNumInfo")
     @ResponseBody
     public HashMap<String, List<String>> getInfo() throws InterruptedException {
@@ -60,4 +67,5 @@ public class ConsoleController {
     public Map<String, Object> getSalaryInformation() {
         return consoleService.getSalaryInformation();
     }
+
 }
