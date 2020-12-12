@@ -3,6 +3,8 @@ package com.fanhao.businessplatform;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.extra.mail.MailAccount;
+import cn.hutool.extra.mail.MailUtil;
 import com.fanhao.businessplatform.cache.CacheOperation;
 import com.fanhao.businessplatform.entity.Employee;
 import com.fanhao.businessplatform.service.ConsoleService;
@@ -68,6 +70,17 @@ class BusinessPlatformApplicationTests {
         cacheOperation.getOnlineUserList().forEach(employee -> {
             System.out.println(employee);
         });
+    }
+
+    @Test
+    void mailTest() {
+        MailAccount mailAccount = new MailAccount();
+        mailAccount.setHost("smtp.126.com");
+        mailAccount.setPort(25);
+        mailAccount.setAuth(true);
+        mailAccount.setFrom("jorybeast97@126.com");
+        mailAccount.setUser("jorybeast97@126.com");
+        mailAccount.setPass("NLJGPBEEAHOVJBYJ");
     }
 
 }

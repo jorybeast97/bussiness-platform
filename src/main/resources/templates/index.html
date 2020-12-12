@@ -103,13 +103,20 @@
                         <dd><a href="/vacation/personalVacation" target="content_iframe"> 休假申请</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a href="/message/personalMessage/" target="content_iframe">
-                        <i class="fa fa-commenting">
-                            消息通知
-                            <span th:remove="${messageInfo.get('present')}" th:text="${messageInfo.get('num')}" class="layui-badge"></span>
-                        </i>
+                <li class="layui-nav-item">
+                    <a href="JavaScript:">
+                        <i class="fa fa-commenting"> 消息通知</i>
                     </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="/message/personalMessage/" target="content_iframe">
+                                个人消息
+                                <span th:remove="${messageInfo.get('present')}" th:text="${messageInfo.get('num')}" class="layui-badge"></span>
+                            </a>
+                        </dd>
+                        <dd><a href="/email/" target="content_iframe">邮件信息</a></dd>
+                    </dl>
+
                 </li>
                 <li class="layui-nav-item">
                     <a href="JavaScript:">

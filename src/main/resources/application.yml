@@ -44,3 +44,9 @@ utils:
 data-generation:
   enable: false
   data-num: 1000
+
+mail:
+  mail-account: jorybeast97@126.com
+  mail-password: NLJGPBEEAHOVJBYJ
+  IMAP:
+  POP3:

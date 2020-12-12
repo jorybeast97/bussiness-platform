@@ -4,13 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>企业人事管理平台</title>
-    <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
-    <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
+
 </head>
-<body style="background-color: whitesmoke">
-<div style="width: 100%">
-    <div  style="width: 80%" ></div>
-</div>
+<body>
+    <blockquote>
+        <p>如需使用邮件功能，请按照如下内容执行配置，以保证发送者以及接收者能够正确接收信息(该过程只需执行一次)</p>
+    </blockquote>
+    <ul>
+        <li>登录个人邮箱(请使用网页登录，已方便检查设置)</li>
+        <li>打开邮箱设置界面，找到POP3/STMP/IMAP服务选项</li>
+        <li>开启POP3/STMP/IMAP服务选项，记录个人密钥，也可以自己设置密钥</li>
+        <li>保存设置</li>
+    </ul>
+
 <!--引入echarts-->
 <script th:src="@{../../static/js/echart/echarts.min.js}"></script>
 <script th:src="@{../../static/js/layui/layui.js}"></script>
