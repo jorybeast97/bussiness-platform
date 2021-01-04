@@ -8,6 +8,7 @@ import com.fanhao.businessplatform.utils.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -21,6 +22,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author fanhao
+ *
+ * 该类为Redis Cache相关操作集合，Redis在本系统中，主要用作缓存对一些性能问题进行改善，
+ * 如果机器上没有部署Redis，请关闭applicaiton.yml中enable-cache选项，防止异常报错
+ */
 @Component
 public class CacheOperation {
     private final Logger LOGGER = LoggerFactory.getLogger(CacheOperation.class);
@@ -31,6 +38,8 @@ public class CacheOperation {
     @Autowired
     private EmployeeService employeeService;
 
+    @Value("${spring.redis.enable-cache}")
+    private boolean enableCache;
 
     /**
      * 用户进行操作时，记录用户在线信息
@@ -41,6 +50,7 @@ public class CacheOperation {
     public void recordUserOperation(final HttpServletRequest request,
                                     final HttpServletResponse response,
                                     final String token) {
+        if (!enableCache) return;
         final String username = PermissionUtils.getClaimsInformation(token).get(PermissionUtils.JWT_TOKEN_USERNAME);
         final String redisKey = getUserOnlineOperationKey(username);
         try {

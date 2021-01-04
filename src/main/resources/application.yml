@@ -15,10 +15,12 @@ spring:
     url: jdbc:mysql://localhost:3306/business_platform?characterEncoding=utf8&autoReconnect=true&serverTimezone=PRC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root
+    password: 19970911fh
     type: com.zaxxer.hikari.HikariDataSource
   # reid配置
   redis:
+    # 开启Redis选项
+    enable-cache: false
     database: 0
     host: 127.0.0.1
     port: 6379
