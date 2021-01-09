@@ -7,44 +7,53 @@
     <link rel="stylesheet" th:href="@{../../static/js/layui/css/layui.css}">
     <link rel="stylesheet" th:href="@{../../static/js/font-awesome-4.7.0/css/font-awesome.css}">
 </head>
-<body class="layui-layout-body">
-<br>
-<form class="layui-form" action="" id="search">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">员工姓名</label>
-            <div class="layui-input-inline">
-                <input type="text" name="name" id="searchName" lay-verify="" autocomplete="off" class="layui-input" >
+<body>
+    <div style="padding: 20px; background-color: #F2F2F2;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <i class="fa fa-user"> 员工信息</i>
+                    </div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="" id="search">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">员工姓名</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" id="searchName" lay-verify="" autocomplete="off" class="layui-input" >
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">员工ID-Card</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="idCard" id="searchIdCard" lay-verify="" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline"style="float: right">
+                                    <button type="button" onclick="doSearch();" class="layui-btn">Search</button>
+                                    <button type="reset"  class="layui-btn layui-btn-normal">重置信息</button>
+                                </div>
+                            </div>
+                        </form>
+                        <table class="layui-hide" id="employeeInfo" lay-filter="employeeInfo"></table>
+                        <script type="text/html" id="toolbarDemo">
+                            <div id="layerDemo" class="layui-btn-container">
+                                <button th:remove="${role}" data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加员工</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="barDemo">
+                            <a th:remove="${role}" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                            <a th:remove="${role}" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                        </script>
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">员工ID-Card</label>
-            <div class="layui-input-inline">
-                <input type="text" name="idCard" id="searchIdCard" lay-verify="" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-
-        <div class="layui-inline"style="float: right">
-            <button type="button" onclick="doSearch();" class="layui-btn">Search</button>
-            <button type="reset"  class="layui-btn layui-btn-normal">重置信息</button>
-        </div>
     </div>
-</form>
-<table class="layui-hide" id="test" lay-filter="test"></table>
 
-<script type="text/html" id="toolbarDemo">
-    <div id="layerDemo" class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
-        <button th:remove="${role}" data-method="offset" data-type="auto" class="layui-btn layui-btn-sm layui-btn-warm">添加员工</button>
-    </div>
-</script>
-
-<script type="text/html" id="barDemo">
-    <a th:remove="${role}" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a th:remove="${role}" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
 <!--引入echarts-->
 <script th:src="@{../../static/js/echart/echarts.min.js}"></script>
 <script th:src="@{../../static/js/layui/layui.all.js}"></script>
@@ -58,7 +67,7 @@
 
 
         table.render({
-            elem: '#test'
+            elem: '#employeeInfo'
             ,url:'http://localhost:8081/employee/list'
             ,parseData: function (res) {
                 return {
@@ -123,12 +132,12 @@
                 ]
             ]
             ,page: true
-            ,limit:13
-            ,limits: [10,12]
+            ,limit:15
+            ,limits: [10,15,20]
         });
 
         //头工具栏事件
-        table.on('toolbar(test)', function(obj){
+        table.on('toolbar(employeeInfo)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'getCheckData':
@@ -151,7 +160,7 @@
         });
 
         //监听行工具事件
-        table.on('tool(test)', function(obj){
+        table.on('tool(employeeInfo)', function(obj){
             var id = obj.data.id;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
@@ -221,7 +230,7 @@
         //获取参数
         var nameParam = $("#searchName").val();
         var idCardParam = $("#searchIdCard").val();
-        table.reload('test',{
+        table.reload('employeeInfo',{
             where: {
                 name: nameParam,
                 idCard: idCardParam
