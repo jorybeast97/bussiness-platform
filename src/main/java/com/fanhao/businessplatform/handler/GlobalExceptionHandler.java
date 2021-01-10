@@ -18,6 +18,9 @@ public class GlobalExceptionHandler {
     @Autowired
     private ExceptionLogService exceptionLogService;
 
+    /**
+     * 全局异常拦截器，抛出异常同时在异常日志中记录相关信息
+     */
     @ExceptionHandler(value = Exception.class)
     public void HandlerAllException(HttpServletRequest request,
                                     HttpServletResponse response,

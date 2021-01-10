@@ -2,9 +2,6 @@ server:
   port: 8081
 
 spring:
-  # 开发阶段，配置为dev配置，便于接口调试
-  profiles:
-    active: dev
   # Thymeleaf配置
   thymeleaf:
     enabled: true
@@ -22,8 +19,8 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
   # reid配置
   redis:
-    # 开启Redis选项
-    enable-cache: true
+    # dev配置 关闭Redis选项
+    enable-cache: false
     database: 0
     host: 127.0.0.1
     port: 6379

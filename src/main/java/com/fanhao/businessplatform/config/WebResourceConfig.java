@@ -17,6 +17,10 @@ public class WebResourceConfig extends WebMvcConfigurationSupport {
     @Autowired
     private PageInterceptor pageInterceptor;
 
+    /**
+     *
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(pageInterceptor)

@@ -6,6 +6,7 @@ import com.fanhao.businessplatform.utils.PermissionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -23,6 +24,9 @@ public class PageInterceptor implements HandlerInterceptor {
     @Autowired
     private CacheOperation cacheOperation;
 
+    @Value("${utils.loginCheck}")
+    private boolean enableLoginCheck;
+
     /**
      * 全局拦截器,当在Cookie中检测不到有效Cookie时，重定向到登录页面
      * @param request
@@ -33,6 +37,10 @@ public class PageInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //如果未开启校验，可直接访问后端各个接口
+        if (!enableLoginCheck) {
+            return true;
+        }
         final String token = HttpUtils.getCookie(request, PermissionUtils.TOKEN);
         if (token == null) {
             response.sendRedirect("/login");
